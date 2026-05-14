@@ -4,10 +4,255 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>eq-hazard-gem</title>
+    <title>GEM Global Seismic Hazard Map</title>
   </head>
   <body>
-    <div id="app"></div>
+    <!-- Application Wrapper -->
+
+    <div class="app-container">
+      <!-- Header -->
+
+      <header class="app-header">
+        <h1>Global Seismic Hazard Map</h1>
+      </header>
+
+      <!-- Main Content -->
+
+      <main class="app-main">
+        <!-- Left Panel -->
+        <aside class="left-panel">
+          <!-- Risk Panel Wrapper -->
+
+          <div class="risk-panel-wrapper">
+            <!-- =========================================
+       Risk Form Section
+  ========================================== -->
+
+            <div class="risk-form-section">
+              <h2 class="panel-title">Risk Analysis</h2>
+
+              <div class="risk-panel">
+                <!-- PGA Information -->
+
+                <div class="risk-info-group">
+                  <div class="risk-info-card">
+                    <span class="risk-info-label"> PGA Value </span>
+
+                    <div class="risk-value-row">
+
+  <span
+    class="risk-info-value"
+    id="riskPGA"
+  >
+    --
+  </span>
+
+  <span
+    class="risk-badge"
+    id="riskLevel"
+  >
+    No Data
+  </span>
+
+</div>
+                  </div>
+
+                  <div class="risk-info-card">
+                    <span class="risk-info-label"> Nearest Fault </span>
+
+                    <span class="risk-info-value danger" id="riskFault">
+                      --
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Property Type -->
+
+                <div class="form-group">
+                  <label for="propertyType"> Property Type </label>
+
+                  <select id="propertyType">
+                    <option value="" selected disabled>
+                      Select property type
+                    </option>
+
+                    <option value="New Lease">New Lease</option>
+
+                    <option value="Lease Renewal">Lease Renewal</option>
+
+                    <option value="Building Acquisition">
+                      Building Acquisition
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Seismic Question -->
+
+                <div class="form-group hidden" id="leaseRenewalQuestion">
+                  <label for="seismicAssessmentDone">
+                    Existing seismic assessment?
+                  </label>
+
+                  <select id="seismicAssessmentDone">
+                    <option value="" selected disabled>Select option</option>
+
+                    <option value="yes">Yes</option>
+
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <!-- Documents -->
+
+                <div class="form-group hidden" id="documentsSection">
+                  <label> Available Documents </label>
+
+                  <button
+                    type="button"
+                    class="document-toggle-btn"
+                    id="documentToggleBtn"
+                  >
+                    <span> Select Available Documents </span>
+
+                    <span id="documentToggleIcon"> + </span>
+                  </button>
+
+                  <div class="document-list collapsed" id="documentList">
+                    <label class="document-item">
+                      <input type="checkbox" value="Structural design report" />
+                      <span> Structural design report </span>
+                    </label>
+
+                    <label class="document-item">
+                      <input type="checkbox" value="Architectural drawings" />
+                      <span> Architectural drawings </span>
+                    </label>
+
+                    <label class="document-item">
+                      <input
+                        type="checkbox"
+                        value="Structural as-built drawings"
+                      />
+                      <span> Structural as-built drawings </span>
+                    </label>
+
+                    <label class="document-item">
+                      <input
+                        type="checkbox"
+                        value="loor plan showing structural columns and walls location"
+                      />
+                      <span>
+                        Floor plan showing structural columns and walls location
+                      </span>
+                    </label>
+
+                    <label class="document-item">
+                      <input
+                        type="checkbox"
+                        value="Digital structural model (ETABS or equivalent)"
+                      />
+                      <span>
+                        Digital structural model (ETABS or equivalent)
+                      </span>
+                    </label>
+
+                    <label class="document-item">
+                      <input
+                        type="checkbox"
+                        value="Inspection/material testing reports"
+                      />
+                      <span> Inspection/material testing reports </span>
+                    </label>
+
+                    <label class="document-item">
+                      <input
+                        type="checkbox"
+                        value="Building maintenance records"
+                      />
+                      <span> Building maintenance records </span>
+                    </label>
+
+                    <label class="document-item">
+                      <input
+                        type="checkbox"
+                        value="Mechanical, Electrical and Plumbing (MEP) construction documentation"
+                      />
+                      <span>
+                        Mechanical, Electrical and Plumbing (MEP) construction
+                        documentation
+                      </span>
+                    </label>
+
+                    <label class="document-item">
+                      <input type="checkbox" value="Geotechnical report" />
+                      <span> Geotechnical report </span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Building Type -->
+
+                <div class="form-group">
+                  <label for="buildingType"> Building Type </label>
+
+                  <select id="buildingType">
+                    <option value="" selected disabled>
+                      Select building type
+                    </option>
+
+                    <option value="URM">Unreinforced Masonry / Wood</option>
+
+                    <option value="RC">RC Frame / Shear Wall / Steel</option>
+                  </select>
+                </div>
+
+                <!-- Stories -->
+
+                <div class="form-group">
+                  <label for="buildingStories"> Number of Stories </label>
+
+                  <input
+                    type="number"
+                    id="buildingStories"
+                    placeholder="e.g. 6"
+                    min="1"
+                  />
+                </div>
+
+                <!-- Analyze -->
+
+                <button id="analyzeBtn" class="analyze-btn">
+                  Analyze Risk
+                </button>
+              </div>
+            </div>
+
+            <!-- =========================================
+       Report Section
+  ========================================== -->
+
+            <div class="risk-report-section">
+              <div class="report-header">Analysis Report</div>
+
+              <div class="report-content" id="riskResult">No analysis yet</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Map Area -->
+
+        <section class="map-section">
+          <div id="map"></div>
+
+          <!-- Coordinate Control Anchor -->
+
+          <div class="map-coordinate-anchor">
+            <div class="coordinate-control">Lat: 0.0000 | Lng: 0.0000</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

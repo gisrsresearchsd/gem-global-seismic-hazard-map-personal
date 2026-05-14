@@ -1,0 +1,43 @@
+/* Map Section */
+
+.map-section {
+  width: 75%;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+/* Leaflet Map */
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Coordinate Control Anchor */
+
+.map-coordinate-anchor {
+  position: absolute;
+
+  bottom: 10px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 1000;
+
+  pointer-events: none;
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 768px) {
+
+  .map-section {
+    width: 100%;
+
+    flex: 1;
+  }
+}

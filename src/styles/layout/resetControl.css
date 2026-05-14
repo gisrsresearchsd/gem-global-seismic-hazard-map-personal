@@ -1,0 +1,46 @@
+/* Reset Control */
+
+.reset-control {
+  padding:
+    10px 16px;
+
+  background:
+    var(--bg-control);
+
+  border:
+    1px solid var(--border-color);
+
+  border-radius:
+    var(--radius-lg);
+
+  backdrop-filter:
+    blur(14px);
+
+  -webkit-backdrop-filter:
+    blur(14px);
+
+  box-shadow:
+    var(--shadow-lg);
+
+  color:
+    var(--text-primary);
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    all 0.2s ease;
+}
+
+/* Hover */
+
+.reset-control:hover {
+  background:
+    rgba(255,255,255,0.08);
+
+  transform:
+    translateY(-1px);
+}

@@ -1,0 +1,52 @@
+/* Left Sidebar Panel */
+
+.left-panel {
+  width: 25%;
+
+  min-width: 280px;
+
+  padding: 20px;
+
+  background-color: var(--bg-sidebar);
+
+  color: var(--text-primary);
+
+  border-right:
+    1px solid var(--border-color);
+
+  overflow-y: auto;
+
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.left-panel h2 {
+  margin-bottom: 12px;
+
+  font-size: 18px;
+}
+
+.left-panel p {
+  line-height: 1.5;
+
+  color: var(--text-secondary);
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 768px) {
+
+  .left-panel {
+    width: 100%;
+
+    min-width: unset;
+
+    height: 220px;
+
+    border-right: none;
+
+    border-bottom:
+      1px solid var(--border-color);
+  }
+}

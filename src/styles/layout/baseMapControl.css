@@ -1,0 +1,89 @@
+/* Custom Basemap Control */
+
+.custom-basemap-control {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  padding: 12px;
+
+  background: var(--bg-control);
+
+  backdrop-filter: blur(16px);
+
+  -webkit-backdrop-filter: blur(16px);
+
+  border:
+    1px solid var(--border-color);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-lg);
+}
+
+/* Basemap Button */
+
+.basemap-btn {
+  width: 140px;
+
+  padding: 10px 14px;
+
+  border: none;
+
+  border-radius: var(--radius-md);
+
+  background: rgba(255, 255, 255, 0.06);
+
+  color: var(--text-primary);
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    all 0.25s ease;
+}
+
+/* Hover */
+
+.basemap-btn:hover {
+  transform: translateY(-2px);
+
+  background:
+    var(--bg-control-hover);
+}
+
+/* Active Button */
+
+.basemap-btn.active {
+  background:
+    var(--bg-control-active);
+
+  color: white;
+
+  box-shadow:
+    0 4px 14px rgba(0, 81, 135, 0.45);
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 768px) {
+
+  .custom-basemap-control {
+    gap: 8px;
+
+    padding: 10px;
+  }
+
+  .basemap-btn {
+    width: 120px;
+
+    padding: 8px 10px;
+
+    font-size: 12px;
+  }
+}
