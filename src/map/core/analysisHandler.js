@@ -1,149 +1,181 @@
-import L from 'leaflet';
+import L from "leaflet";
 
-import {
-  getPGAValue,
-} from '../layers/pgaLayer';
+import { getPGAValue } from "../layers/pgaLayer";
+import { getNearestFault } from "../layers/faultLayer";
+import { getSeismicClassification } from "../../utils/seismicUtils";
+import { mapState } from "../../state/mapState";
 
-import {
-  getNearestFault,
-} from '../layers/faultLayer';
+// UI Elements
+const riskPGA = document.getElementById("riskPGA");
+const riskLevel = document.getElementById("riskLevel");
+const riskFault = document.getElementById("riskFault");
 
-import {
-  getSeismicClassification,
-} from '../../utils/seismicUtils';
+// Active marker references
+let activeMarker = null;
+let activePulseMarker = null;
 
-import {
-  mapState,
-} from '../../state/mapState';
+// Create consistent marker style
+function createLocationMarker(lat, lng, map) {
+  // Remove existing marker completely
+  if (activeMarker) {
+    map.removeLayer(activeMarker);
+    activeMarker = null;
+  }
+  if (activePulseMarker) {
+    map.removeLayer(activePulseMarker);
+    activePulseMarker = null;
+  }
+
+  // Create main marker
+  const marker = L.circleMarker([lat, lng], {
+    radius: 10,
+    color: '#ffffff',
+    weight: 3,
+    fillColor: '#0066b3',
+    fillOpacity: 0.9,
+    pane: 'overlayPane',
+  });
+
+  // Create pulse effect marker
+  const pulseMarker = L.circleMarker([lat, lng], {
+    radius: 20,
+    color: '#0066b3',
+    weight: 2,
+    fillColor: '#0066b3',
+    fillOpacity: 0.2,
+    pane: 'overlayPane',
+  });
+
+  marker.addTo(map);
+  pulseMarker.addTo(map);
+
+  // Remove pulse after animation
+  setTimeout(() => {
+    if (pulseMarker) {
+      map.removeLayer(pulseMarker);
+      activePulseMarker = null;
+    }
+  }, 1000);
+
+  activeMarker = marker;
+  activePulseMarker = pulseMarker;
+
+  return marker;
+}
 
 // Analyze Location
+export async function analyzeLocation(map, lat, lng) {
+  try {
+    // Remove existing marker before adding new one
+    if (activeMarker) {
+      map.removeLayer(activeMarker);
+      activeMarker = null;
+    }
+    if (activePulseMarker) {
+      map.removeLayer(activePulseMarker);
+      activePulseMarker = null;
+    }
+    
+    // Add marker for clicked location
+    createLocationMarker(lat, lng, map);
 
-export async function analyzeLocation(
-  map,
-  lat,
-  lng
-) {
+    // PGA
+    const pgaValue = await getPGAValue(lat, lng);
 
-  // PGA
+    // Fault
+    const nearestFault = getNearestFault(map, lat, lng);
 
-  const pgaValue =
-    await getPGAValue(
-      lat,
-      lng
-    );
+    // No Data
+    if (pgaValue === null || isNaN(pgaValue)) {
+      resetAnalysisUI();
+      updateMapStateLocation(lat, lng, null, null, nearestFault);
+      return;
+    }
 
-  // Nearest Fault
+    // Classification
+    const classification = getSeismicClassification(pgaValue);
 
-  const nearestFault =
-    getNearestFault(
-      map,
-      lat,
-      lng
-    );
+    // Formatted PGA
+    const formattedPGA = Number(pgaValue).toFixed(4);
 
-  // UI Elements
+    // Update State
+    updateMapStateLocation(lat, lng, pgaValue, classification, nearestFault);
 
-  const riskPGA =
-    document.getElementById(
-      'riskPGA'
-    );
+    // Update UI
+    updateAnalysisUI({
+      formattedPGA,
+      classification,
+      nearestFault,
+    });
 
-  const riskLevel =
-    document.getElementById(
-      'riskLevel'
-    );
-
-  const riskFault =
-    document.getElementById(
-      'riskFault'
-    );
-
-  // No Data
-
-  if (pgaValue === null) {
-
-    riskPGA.innerHTML = '--';
-
-    riskLevel.innerHTML =
-      'No Data';
-
-    riskFault.innerHTML =
-      '--';
-
-    return;
+    // Simple popup with just PGA value
+    showSimplePopup(map, lat, lng, formattedPGA);
+  } catch (error) {
+    console.error("Location analysis failed:", error);
   }
+}
 
-  // Classification
-
-  const classification =
-    getSeismicClassification(
-      pgaValue
-    );
-
-  // Update State
-
+// Update map state location
+function updateMapStateLocation(lat, lng, pga, classification, nearestFault) {
   mapState.lat = lat;
-
   mapState.lng = lng;
+  mapState.pga = pga;
+  mapState.classification = classification;
+  mapState.nearestFault = nearestFault;
+}
 
-  mapState.pga = pgaValue;
-
-  mapState.classification =
-    classification;
-
-  mapState.nearestFault =
-    nearestFault;
-
+// Update Analysis UI
+function updateAnalysisUI({ formattedPGA, classification, nearestFault }) {
   // PGA
+  riskPGA.innerHTML = `${formattedPGA} g`;
 
-  riskPGA.innerHTML =
-    `${Number(
-      pgaValue
-    ).toFixed(4)} g`;
+  // Reset Badge
+  riskLevel.className = "risk-badge";
 
-  // Badge
-
-  riskLevel.className =
-    'risk-badge';
-
-  if (
-    classification.colorClass
-  ) {
-
-    riskLevel.classList.add(
-      classification.colorClass
-    );
+  // Risk Class
+  if (classification.colorClass) {
+    riskLevel.classList.add(classification.colorClass);
   }
 
-  riskLevel.innerHTML =
-    classification.label;
+  // Risk Label
+  riskLevel.innerHTML = classification.label;
 
   // Fault
+  riskFault.innerHTML = nearestFault
+    ? `
+        ${nearestFault.name}
+        (${nearestFault.distance.toFixed(2)} km)
+      `
+    : "--";
+}
 
-  if (
-    nearestFault
-  ) {
+// Reset UI
+function resetAnalysisUI() {
+  riskPGA.innerHTML = "--";
+  riskLevel.className = "risk-badge";
+  riskLevel.innerHTML = "No Data";
+  riskFault.innerHTML = "--";
+}
 
-    riskFault.innerHTML = `
-      ${nearestFault.name}
-      (${nearestFault.distance.toFixed(2)} km)
-    `;
-
-  } else {
-
-    riskFault.innerHTML =
-      '--';
-  }
-
-  // Popup
-
+// Simple popup without extra text
+function showSimplePopup(map, lat, lng, formattedPGA) {
+  // Close any existing popup
+  map.closePopup();
+  
   L.popup()
     .setLatLng([lat, lng])
-    .setContent(`
-      <b>PGA Value</b><br>
-      ${Number(
-        pgaValue
-      ).toFixed(4)} g
-    `)
+    .setContent(`${formattedPGA} g`)
     .openOn(map);
+}
+
+// Export marker removal function
+export function clearLocationMarker(map) {
+  if (activeMarker) {
+    map.removeLayer(activeMarker);
+    activeMarker = null;
+  }
+  if (activePulseMarker) {
+    map.removeLayer(activePulseMarker);
+    activePulseMarker = null;
+  }
 }

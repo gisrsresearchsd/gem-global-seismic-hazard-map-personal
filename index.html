@@ -14,6 +14,7 @@
 
       <header class="app-header">
         <h1>Global Seismic Hazard Map</h1>
+        <span class="header-subtitle"> Version:X.X </span>
       </header>
 
       <!-- Main Content -->
@@ -24,37 +25,22 @@
           <!-- Risk Panel Wrapper -->
 
           <div class="risk-panel-wrapper">
-            <!-- =========================================
-       Risk Form Section
-  ========================================== -->
+            <!-- TITLE -->
+
+            <h2 class="panel-title">Risk Analysis</h2>
 
             <div class="risk-form-section">
-              <h2 class="panel-title">Risk Analysis</h2>
-
               <div class="risk-panel">
                 <!-- PGA Information -->
-
                 <div class="risk-info-group">
                   <div class="risk-info-card">
                     <span class="risk-info-label"> PGA Value </span>
 
                     <div class="risk-value-row">
+                      <span class="risk-info-value" id="riskPGA"> -- </span>
 
-  <span
-    class="risk-info-value"
-    id="riskPGA"
-  >
-    --
-  </span>
-
-  <span
-    class="risk-badge"
-    id="riskLevel"
-  >
-    No Data
-  </span>
-
-</div>
+                      <span class="risk-badge" id="riskLevel"> No Data </span>
+                    </div>
                   </div>
 
                   <div class="risk-info-card">
@@ -218,13 +204,11 @@
                     min="1"
                   />
                 </div>
-
-                <!-- Analyze -->
-
-                <button id="analyzeBtn" class="analyze-btn">
-                  Analyze Risk
-                </button>
               </div>
+            </div>
+            <!-- Analyze -->
+            <div class="risk-action-section">
+              <button id="analyzeBtn" class="analyze-btn">Analyze Risk</button>
             </div>
 
             <!-- =========================================

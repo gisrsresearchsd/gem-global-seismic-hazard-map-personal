@@ -1,8 +1,8 @@
-import { runRiskAnalysis } from "../risk/riskRules";
+import { runRiskAnalysis } from "../../risk/riskRules";
 
-import { generateRiskReport } from "../risk/riskReport";
+import { generateRiskReport } from "./riskReport";
 
-import { mapState } from "../state/mapState";
+import { mapState } from "../../state/mapState";
 // Initialize Risk Panel
 
 export function initializeRiskPanel() {

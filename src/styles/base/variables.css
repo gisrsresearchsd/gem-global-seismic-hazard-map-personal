@@ -1,0 +1,73 @@
+:root {
+  /* Brand Colors - Enhanced Professional Palette */
+  --primary-color: #0066b3;
+  --primary-light: #2d7fc1;
+  --primary-dark: #004d8c;
+  --primary-rgb: 0, 102, 179;
+
+  /* Accent Colors */
+  --accent-blue: #00a8e8;
+  --accent-teal: #00c4b8;
+
+  /* Backgrounds - Deeper, More Elegant */
+  --bg-app: #0a0f1a;
+  --bg-panel: #070c15;
+  --bg-control: rgba(10, 18, 30, 0.92);
+  --bg-card: rgba(20, 30, 45, 0.8);
+  --bg-card-solid: #141e2d;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --bg-active: rgba(255, 255, 255, 0.1);
+
+  /* Text - Better Contrast Hierarchy */
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e6;
+  --text-muted: #8a9bb5;
+  --text-disabled: #5a6b85;
+
+  /* Borders - Softer */
+  --border-color: rgba(255, 255, 255, 0.06);
+  --border-color-light: rgba(255, 255, 255, 0.1);
+  --border-color-focus: rgba(0, 102, 179, 0.5);
+
+  /* Status Colors - Professional Tones */
+  --success-color: #22c55e;
+  --success-bg: rgba(34, 197, 94, 0.12);
+  --warning-color: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.12);
+  --danger-color: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.12);
+  --info-color: #3b82f6;
+  --info-bg: rgba(59, 130, 246, 0.12);
+  --neutral-color: #94a3b8;
+  --neutral-bg: rgba(148, 163, 184, 0.12);
+
+  /* Radius - Consistent */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 24px;
+
+  /* Shadows - Depth Perception */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.18);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 20px rgba(0, 102, 179, 0.3);
+
+  /* Transition */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.35s ease;
+
+  /* Z Index - Structured */
+  --z-base: 1;
+  --z-map-controls: 400;
+  --z-sidebar: 1000;
+  --z-control: 1100;
+  --z-popup: 1200;
+  --z-modal: 1300;
+  --z-tooltip: 1400;
+}

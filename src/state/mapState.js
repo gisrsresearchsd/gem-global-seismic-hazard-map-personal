@@ -1,22 +1,28 @@
-// Shared Map State
+// ========================================
+// GLOBAL MAP STATE
+// ========================================
 
 export const mapState = {
 
   // Selected Location
-
   lat: null,
-
   lng: null,
 
-  // PGA
-
+  // PGA Analysis
   pga: null,
-
-  // Seismic Classification
-
   classification: null,
-
-  // Nearest Fault
-
   nearestFault: null,
+
+  // UI State
+  selectedMarker: null,
+  activePopup: null,
+  faultConnectionLine: null,
+  searchMarker: null,
+
+  // Map State
+  activeBaseMap: "Light",
+  lastSearch: "",
+
+  // Async State
+  isAnalyzing: false,
 };

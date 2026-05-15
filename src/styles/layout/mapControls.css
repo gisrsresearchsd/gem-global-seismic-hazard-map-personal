@@ -1,117 +1,170 @@
-/* Shared Glass Control Style */
+/* ========================================
+   MAP CONTROLS - PROFESSIONAL
+======================================== */
 
+/* Shared Glass Surface */
 .coordinate-control,
-.leaflet-control-zoom,
-.leaflet-control-scale-line {
-  backdrop-filter: blur(14px);
-
-  -webkit-backdrop-filter: blur(14px);
+.leaflet-control-scale-line,
+.leaflet-control-zoom a,
+.custom-basemap-control {
+  background: var(--bg-control);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
 }
 
-/* Coordinate Control */
+/* ========================================
+   COORDINATE CONTROL
+======================================== */
 
 .coordinate-control {
   display: flex;
-
   align-items: center;
-
-  height: 34px;
-
-  padding: 0 14px;
-
-  background: var(--bg-control);
-
-  border-radius: var(--radius-md);
-
-  border:
-    1px solid var(--border-color);
-
-  color: var(--text-primary);
-
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 16px;
+  border-radius: var(--radius-xl);
   font-size: 12px;
-
   font-weight: 600;
-
+  letter-spacing: 0.3px;
   box-shadow: var(--shadow-md);
-
   white-space: nowrap;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  background: rgba(10, 18, 30, 0.95);
 }
 
-/* Scale Control */
+/* ========================================
+   SCALE CONTROL
+======================================== */
 
 .leaflet-control-scale-line {
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  height: 34px;
-
-  padding: 0 12px;
-
-  background: var(--bg-control);
-
-  color: var(--text-primary);
-
-  border:
-    1px solid var(--border-color);
-
-  border-radius: var(--radius-md);
-
-  font-size: 12px;
-
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: var(--radius-xl);
+  font-size: 11px;
   font-weight: 600;
-
+  letter-spacing: 0.3px;
   box-shadow: var(--shadow-md);
+  background: rgba(10, 18, 30, 0.95);
+  border: none;
+  color: var(--text-secondary);
 }
 
-/* Zoom Buttons */
+.leaflet-control-scale-line:not(:first-child) {
+  border-top: none;
+  margin-top: 6px;
+}
+
+/* ========================================
+   ZOOM CONTROL - Modern
+======================================== */
 
 .leaflet-control-zoom {
   border: none !important;
-
   overflow: hidden;
-
   border-radius: var(--radius-lg);
-
   box-shadow: var(--shadow-lg);
 }
 
 .leaflet-control-zoom a {
-  background:
-    var(--bg-control) !important;
-
-  color:
-    var(--text-primary) !important;
-
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  font-size: 18px;
+  font-weight: 500;
   border: none !important;
-
-  transition:
-    all 0.2s ease;
+  transition: all var(--transition-fast);
+  background: var(--bg-control);
+  color: var(--text-primary);
 }
 
+.leaflet-control-zoom a:first-child {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.leaflet-control-zoom a:last-child {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* Hover */
 .leaflet-control-zoom a:hover {
-  background:
-    var(--bg-control-hover) !important;
+  background: var(--bg-hover);
+  color: var(--primary-light);
 }
 
-/* Fault Distance Animation */
+/* Active */
+.leaflet-control-zoom a:active {
+  transform: scale(0.96);
+}
+
+/* Separator Line */
+.leaflet-control-zoom a:first-child {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* ========================================
+   FAULT DISTANCE LINE
+======================================== */
 
 .fault-distance-line {
-  animation:
-    dashMove 1s linear infinite;
+  animation: dashMove 1.2s linear infinite;
 }
 
 /* Dash Animation */
-
 @keyframes dashMove {
-
   from {
-    stroke-dashoffset: 16;
+    stroke-dashoffset: 20;
   }
-
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+/* ========================================
+   LEAFLET POPUP STYLING
+======================================== */
+
+.leaflet-popup-content-wrapper {
+  background: var(--bg-control);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-control);
+  border: 1px solid var(--border-color);
+}
+
+.leaflet-popup-content {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 12px 16px;
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 768px) {
+  .coordinate-control,
+  .leaflet-control-scale-line {
+    min-height: 30px;
+    font-size: 10px;
+    padding: 0 12px;
+  }
+
+  .leaflet-control-zoom a {
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    font-size: 16px;
   }
 }

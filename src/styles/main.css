@@ -1,8 +1,7 @@
 /* Theme */
-@import './theme/variables.css';
-
-/* Base */
+@import './base/variables.css';
 @import './base/reset.css';
+@import './base/global.css';
 
 /* Layout */
 @import './layout/appLayout.css';

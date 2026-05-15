@@ -1,89 +1,90 @@
-/* Custom Basemap Control */
+/* ========================================
+   BASEMAP CONTROL - PROFESSIONAL
+======================================== */
 
+/* Basemap Control */
 .custom-basemap-control {
   display: flex;
-
   flex-direction: column;
-
-  gap: 10px;
-
+  gap: 8px;
   padding: 12px;
-
+  min-width: 130px;
   background: var(--bg-control);
-
-  backdrop-filter: blur(16px);
-
-  -webkit-backdrop-filter: blur(16px);
-
-  border:
-    1px solid var(--border-color);
-
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow: var(--shadow-lg);
+  transition: all var(--transition-fast);
+}
+
+.custom-basemap-control:hover {
+  border-color: var(--border-color-light);
 }
 
 /* Basemap Button */
-
 .basemap-btn {
-  width: 140px;
-
-  padding: 10px 14px;
-
-  border: none;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
-
-  background: rgba(255, 255, 255, 0.06);
-
-  color: var(--text-primary);
-
-  font-size: 13px;
-
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 12px;
   font-weight: 600;
-
+  letter-spacing: 0.3px;
   cursor: pointer;
-
-  transition:
-    all 0.25s ease;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
 }
 
 /* Hover */
-
 .basemap-btn:hover {
-  transform: translateY(-2px);
-
-  background:
-    var(--bg-control-hover);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-color-light);
+  transform: translateY(-1px);
 }
 
-/* Active Button */
-
+/* Active */
 .basemap-btn.active {
-  background:
-    var(--bg-control-active);
-
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
-
-  box-shadow:
-    0 4px 14px rgba(0, 81, 135, 0.45);
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
 }
 
-/* Mobile Responsive */
+.basemap-btn.active::before {
+  content: '✓';
+  margin-right: 6px;
+  font-size: 10px;
+}
+
+/* Focus */
+.basemap-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 102, 179, 0.3);
+}
+
+/* ========================================
+   MOBILE
+======================================== */
 
 @media (max-width: 768px) {
-
   .custom-basemap-control {
-    gap: 8px;
-
-    padding: 10px;
+    min-width: 110px;
+    padding: 8px;
+    gap: 6px;
   }
 
   .basemap-btn {
-    width: 120px;
-
-    padding: 8px 10px;
-
-    font-size: 12px;
+    min-height: 32px;
+    font-size: 11px;
+    padding: 0 10px;
   }
 }

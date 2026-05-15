@@ -1,52 +1,80 @@
-/* Left Sidebar Panel */
+/* ========================================
+   LEFT SIDEBAR - PROFESSIONAL
+======================================== */
 
 .left-panel {
-  width: 25%;
-
-  min-width: 280px;
-
-  padding: 20px;
-
-  background-color: var(--bg-sidebar);
-
-  color: var(--text-primary);
-
-  border-right:
-    1px solid var(--border-color);
-
-  overflow-y: auto;
-
-  backdrop-filter: blur(14px);
-
-  -webkit-backdrop-filter: blur(14px);
+  width: 380px;
+  min-width: 380px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: linear-gradient(180deg, rgba(10, 18, 30, 0.98) 0%, rgba(7, 12, 21, 0.98) 100%);
+  border-right: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  z-index: var(--z-sidebar);
+  position: relative;
 }
+
+/* Sidebar Decorative Border */
+.left-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--primary-color), transparent);
+  opacity: 0.3;
+}
+
+/* Sidebar Title */
 
 .left-panel h2 {
-  margin-bottom: 12px;
-
-  font-size: 18px;
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--text-primary);
 }
 
-.left-panel p {
-  line-height: 1.5;
+/* Sidebar Description */
 
+.left-panel p {
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+  font-size: 13px;
   color: var(--text-secondary);
 }
 
-/* Mobile Responsive */
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 1024px) {
+  .left-panel {
+    width: 340px;
+    min-width: 340px;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
 
 @media (max-width: 768px) {
-
   .left-panel {
     width: 100%;
-
     min-width: unset;
-
-    height: 220px;
-
+    height: 45%;
+    min-height: 320px;
     border-right: none;
-
-    border-bottom:
-      1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .left-panel::after {
+    display: none;
   }
 }

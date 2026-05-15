@@ -1,43 +1,70 @@
-/* Map Section */
+/* ========================================
+   MAP SECTION - PROFESSIONAL
+======================================== */
 
+/* Map Wrapper */
 .map-section {
-  width: 75%;
-
+  flex: 1;
   position: relative;
-
   overflow: hidden;
+  min-width: 0;
+  background: var(--bg-app);
 }
 
 /* Leaflet Map */
-
 #map {
   width: 100%;
   height: 100%;
+  z-index: var(--z-base);
+  background: #0a0f1a;
 }
 
-/* Coordinate Control Anchor */
+/* Map Tile Attribution Styling */
+.leaflet-control-attribution {
+  background: rgba(10, 18, 30, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: var(--radius-md) 0 0 0;
+  font-size: 9px;
+  color: var(--text-muted);
+}
 
+.leaflet-control-attribution a {
+  color: var(--text-secondary);
+}
+
+.leaflet-control-attribution a:hover {
+  color: var(--primary-light);
+}
+
+/* ========================================
+   COORDINATE CONTROL ANCHOR
+======================================== */
 .map-coordinate-anchor {
   position: absolute;
-
-  bottom: 10px;
-
   left: 50%;
-
+  bottom: 16px;
   transform: translateX(-50%);
-
-  z-index: 1000;
-
+  z-index: var(--z-control);
   pointer-events: none;
 }
 
-/* Mobile Responsive */
-
+/* ========================================
+   MOBILE
+======================================== */
 @media (max-width: 768px) {
-
   .map-section {
     width: 100%;
-
+    min-height: 0;
     flex: 1;
+  }
+
+  .map-coordinate-anchor {
+    bottom: 12px;
+  }
+  
+  .leaflet-control-attribution {
+    font-size: 8px;
+    padding: 2px 8px;
   }
 }

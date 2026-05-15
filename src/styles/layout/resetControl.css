@@ -1,46 +1,84 @@
-/* Reset Control */
+/* ========================================
+   RESET CONTROL
+======================================== */
+
+/* Reset Button */
 
 .reset-control {
-  padding:
-    10px 16px;
+  display: flex;
 
-  background:
-    var(--bg-control);
+  align-items: center;
 
-  border:
-    1px solid var(--border-color);
+  justify-content: center;
 
-  border-radius:
-    var(--radius-lg);
+  min-height: 34px;
 
-  backdrop-filter:
-    blur(14px);
+  padding: 0 14px;
 
-  -webkit-backdrop-filter:
-    blur(14px);
+  background: var(--bg-control);
 
-  box-shadow:
-    var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
-  color:
-    var(--text-primary);
+  border-radius: var(--radius-lg);
 
-  font-size: 13px;
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: var(--shadow-lg);
+
+  color: var(--text-primary);
+
+  font-size: 12px;
 
   font-weight: 600;
 
+  letter-spacing: 0.2px;
+
   cursor: pointer;
 
+  user-select: none;
+
   transition:
-    all 0.2s ease;
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 /* Hover */
 
 .reset-control:hover {
-  background:
-    rgba(255,255,255,0.08);
+  background: var(--bg-control-hover);
 
-  transform:
-    translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.1);
+
+  transform: translateY(-1px);
+}
+
+/* Active */
+
+.reset-control:active {
+  transform: scale(0.97);
+}
+
+/* Focus */
+
+.reset-control:focus-visible {
+  outline: none;
+
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 768px) {
+  .reset-control {
+    min-height: 32px;
+
+    padding: 0 12px;
+
+    font-size: 11px;
+  }
 }

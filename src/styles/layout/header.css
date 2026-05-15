@@ -1,23 +1,94 @@
-/* Application Header */
+/* ========================================
+   APPLICATION HEADER - PROFESSIONAL
+======================================== */
+
+/* Header */
 
 .app-header {
-  height: 60px;
-
+  height: 64px;
   display: flex;
   align-items: center;
-
-  padding: 0 20px;
-
-  background-color: var(--primary-dark);
-
-  color: var(--text-primary);
-
-  border-bottom:
-    1px solid var(--border-color);
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(7, 12, 21, 0.85);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: var(--z-sidebar);
 }
 
-.app-header h1 {
-  font-size: 20px;
+/* Header Logo/Gradient Accent */
+.app-header::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-teal), transparent);
+}
 
+/* Title */
+
+.app-header h1 {
+  margin: 0;
+  font-size: 20px;
   font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  background: linear-gradient(135deg, #fff, var(--text-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtitle */
+
+.app-header .header-subtitle {
+  margin-left: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+  background: var(--bg-control);
+  padding: 4px 10px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+}
+
+/* Header Left */
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Header Right (if needed) */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 768px) {
+  .app-header {
+    height: 56px;
+    padding: 0 16px;
+  }
+
+  .app-header h1 {
+    font-size: 16px;
+  }
+
+  .app-header .header-subtitle {
+    display: none;
+  }
 }
