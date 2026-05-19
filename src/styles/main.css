@@ -13,3 +13,6 @@
 @import './layout/riskPanel.css';
 @import './layout/searchControl.css';
 @import './layout/resetControl.css';
+
+/* Add to main.css */
+@import './src/styles/noteModal.css';

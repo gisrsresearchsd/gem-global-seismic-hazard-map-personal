@@ -89,13 +89,17 @@ export async function getPGAValue(lat, lng, currentZoom = null) {
       return null;
     }
 
-    const value = result[0];
-    
-    if (value === null || value === undefined || isNaN(value)) {
-      return null;
-    }
+    const value = Number(result[0]);
 
-    return value;
+// Treat invalid / no-data raster cells as null
+if (
+  !Number.isFinite(value) ||
+  value <= 0
+) {
+  return null;
+}
+
+return value;
   } catch (error) {
     console.error("Raster query failed:", error);
     return null;

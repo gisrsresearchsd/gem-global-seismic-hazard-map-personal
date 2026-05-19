@@ -1,194 +1,266 @@
 import L from "leaflet";
-
 import * as turf from "@turf/turf";
 
 // Fault GeoJSON Reference
-
 let faultGeoJSON = null;
 
 // Fault Layer
-
 export let faultLayer = null;
-// Active Distance Line
 
+// User-controlled visibility
+export let faultLayerEnabled = true;
+
+// Active Distance Line
 let activeDistanceLine = null;
 
-// Load Fault Layer
+/*
+=====================
+Manual Toggle Control
+=====================
+*/
+export function setFaultLayerVisibility(
+  map,
+  enabled
+) {
+  faultLayerEnabled = enabled;
+  updateFaultVisibility(map);
+}
 
+/*
+=====================
+Load Fault Layer
+=====================
+*/
 export async function loadFaultLayer(map) {
   try {
-    // Load GeoJSON
+    const response = await fetch(
+      "/data/fault_Lines.geojson"
+    );
 
-    const response = await fetch("/data/fault_Lines.geojson");
+    faultGeoJSON =
+      await response.json();
 
-    faultGeoJSON = await response.json();
+    // Create layer
+    faultLayer = L.geoJSON(
+      faultGeoJSON,
+      {
+        style: {
+          color: "#ff6b6b",
+          weight: 1.5,
+          opacity: 0.8,
+        },
+        pane: "overlayPane",
+      }
+    );
 
-    // Create Layer
+    console.log(
+      "Fault layer loaded"
+    );
 
-    faultLayer = L.geoJSON(faultGeoJSON, {
-      style: {
-        color: "#ff6b6b",
-
-        weight: 1.5,
-
-        opacity: 0.8,
-      },
-
-      pane: "overlayPane",
-    });
-
-    // Add to Map
-
-    console.log("Fault layer loaded");
-    // Initial Visibility
-
+    // Initial visibility
     updateFaultVisibility(map);
 
-    // Zoom Event
-
+    // Zoom-based visibility
     map.on("zoomend", () => {
       updateFaultVisibility(map);
     });
+
+    // IMPORTANT: return after event registration
+    return faultLayer;
   } catch (error) {
-    console.error("Fault layer failed:", error);
+    console.error(
+      "Fault layer failed:",
+      error
+    );
   }
 }
 
-// Update Fault Visibility
+/*
+=====================
+Visibility Logic
+=====================
+Show only when:
+1. User enabled
+2. Zoom >= 4
+=====================
+*/
+function updateFaultVisibility(
+  map
+) {
+  if (!faultLayer) return;
 
-function updateFaultVisibility(map) {
-  const currentZoom = map.getZoom();
+  const currentZoom =
+    map.getZoom();
 
-  // Show at Zoom >= 4
+  const shouldShow =
+    faultLayerEnabled &&
+    currentZoom >= 4;
 
-  if (currentZoom >= 4) {
+  if (shouldShow) {
     if (!map.hasLayer(faultLayer)) {
       faultLayer.addTo(map);
     }
-  }
-
-  // Hide Below 4
-  else {
+  } else {
     if (map.hasLayer(faultLayer)) {
-      map.removeLayer(faultLayer);
+      map.removeLayer(
+        faultLayer
+      );
     }
   }
 }
 
-// Find Nearest Fault
-
-export function getNearestFault(map, lat, lng) {
+/*
+=====================
+Nearest Fault Analysis
+=====================
+*/
+export function getNearestFault(
+  map,
+  lat,
+  lng
+) {
   if (!faultGeoJSON) {
     return null;
   }
 
   try {
-    // Remove Previous Line
-
     if (activeDistanceLine) {
-      map.removeLayer(activeDistanceLine);
+      map.removeLayer(
+        activeDistanceLine
+      );
     }
 
-    // Click Point
-
-    const clickedPoint = turf.point([lng, lat]);
+    const clickedPoint =
+      turf.point([lng, lat]);
 
     let nearestFault = null;
-
-    let minimumDistance = Infinity;
-
+    let minimumDistance =
+      Infinity;
     let nearestPoint = null;
 
-    // Loop Features
+    faultGeoJSON.features.forEach(
+      (feature) => {
+        const geometryType =
+          feature.geometry.type;
 
-    faultGeoJSON.features.forEach((feature) => {
-      const geometryType = feature.geometry.type;
+        if (
+          geometryType ===
+          "LineString"
+        ) {
+          processLine(
+            feature
+          );
+        } else if (
+          geometryType ===
+          "MultiLineString"
+        ) {
+          const flattened =
+            turf.flatten(
+              feature
+            );
 
-      // LineString
-
-      if (geometryType === "LineString") {
-        processLine(feature);
+          flattened.features.forEach(
+            (
+              lineFeature
+            ) => {
+              processLine(
+                lineFeature,
+                feature
+              );
+            }
+          );
+        }
       }
+    );
 
-      // MultiLineString
-      else if (geometryType === "MultiLineString") {
-        const flattened = turf.flatten(feature);
-
-        flattened.features.forEach((lineFeature) => {
-          processLine(lineFeature, feature);
-        });
-      }
-    });
-
-    // No Result
-
-    if (!nearestFault || !nearestPoint) {
+    if (
+      !nearestFault ||
+      !nearestPoint
+    ) {
       return null;
     }
 
-    // Create Animated Line
-
-    activeDistanceLine = L.polyline(
-      [
-        [lat, lng],
-
+    activeDistanceLine =
+      L.polyline(
         [
-          nearestPoint.geometry.coordinates[1],
-
-          nearestPoint.geometry.coordinates[0],
+          [lat, lng],
+          [
+            nearestPoint
+              .geometry
+              .coordinates[1],
+            nearestPoint
+              .geometry
+              .coordinates[0],
+          ],
         ],
-      ],
-      {
-        color: "#ff4d4f",
+        {
+          color: "#ff4d4f",
+          weight: 2,
+          dashArray: "8 8",
+          opacity: 0.9,
+          pane: "overlayPane",
+          className:
+            "fault-distance-line",
+        }
+      );
 
-        weight: 2,
-
-        dashArray: "8 8",
-
-        opacity: 0.9,
-
-        pane: "overlayPane",
-
-        className: "fault-distance-line",
-      },
+    activeDistanceLine.addTo(
+      map
     );
 
-    activeDistanceLine.addTo(map);
-
-    // Fault Name
-
     const faultName =
-      nearestFault.properties?.name ||
-      nearestFault.properties?.NAME ||
+      nearestFault
+        .properties?.name ||
+      nearestFault
+        .properties?.NAME ||
       "Unknown Fault";
 
     return {
       name: faultName,
-
-      distance: minimumDistance,
+      distance:
+        minimumDistance,
     };
 
-    // Process Line Helper
+    function processLine(
+      lineFeature,
+      originalFeature = lineFeature
+    ) {
+      const distance =
+        turf.pointToLineDistance(
+          clickedPoint,
+          lineFeature,
+          {
+            units:
+              "kilometers",
+          }
+        );
 
-    function processLine(lineFeature, originalFeature = lineFeature) {
-      const distance = turf.pointToLineDistance(clickedPoint, lineFeature, {
-        units: "kilometers",
-      });
+      if (
+        distance <
+        minimumDistance
+      ) {
+        minimumDistance =
+          distance;
 
-      // Better Match
+        nearestFault =
+          originalFeature;
 
-      if (distance < minimumDistance) {
-        minimumDistance = distance;
-
-        nearestFault = originalFeature;
-
-        nearestPoint = turf.nearestPointOnLine(lineFeature, clickedPoint, {
-          units: "kilometers",
-        });
+        nearestPoint =
+          turf.nearestPointOnLine(
+            lineFeature,
+            clickedPoint,
+            {
+              units:
+                "kilometers",
+            }
+          );
       }
     }
   } catch (error) {
-    console.error("Nearest fault failed:", error);
+    console.error(
+      "Nearest fault failed:",
+      error
+    );
 
     return null;
   }

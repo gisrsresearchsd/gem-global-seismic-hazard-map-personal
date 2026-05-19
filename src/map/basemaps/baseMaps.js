@@ -41,6 +41,15 @@ const esriSatellite = L.tileLayer(
   },
 );
 
+// ESRI Topographic (USGS-style topo maps)
+const openTopoMap = L.tileLayer(
+  "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+  {
+    attribution: '&copy; <a href="https://opentopomap.org">OpenTopoMap</a> contributors',
+    maxZoom: 17,
+  },
+);
+
 // Export Base Maps
 
 export const BASE_MAPS = {
@@ -48,4 +57,5 @@ export const BASE_MAPS = {
   "Light": cartoLight,
   "Dark": cartoDark,
   "Satellite": esriSatellite,
+  "Topographic": openTopoMap,
 };

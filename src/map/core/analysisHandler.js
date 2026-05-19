@@ -140,11 +140,12 @@ function showInfoPopup(map, lat, lng, message) {
 }
 
 function updateMapStateLocation(lat, lng, pga, classification, nearestFault) {
-  mapState.lat = lat;
-  mapState.lng = lng;
-  mapState.pga = pga;
-  mapState.classification = classification;
-  mapState.nearestFault = nearestFault;
+  mapState.location.lat = lat;
+mapState.location.lng = lng;
+
+mapState.analysis.pga = pga;
+mapState.analysis.classification = classification;
+mapState.analysis.nearestFault = nearestFault;
 }
 
 function updateAnalysisUI({ formattedPGA, classification, nearestFault }) {

@@ -282,6 +282,44 @@
 }
 
 /* ========================================
+   RIGHT SIDE CONTROL CONTAINERS
+======================================== */
+
+/* Top-right controls (Basemap + Reset) */
+.leaflet-top.leaflet-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 12px;
+
+  right: var(--spacing-md);
+  top: 10px;
+}
+
+/* Bottom-right controls (Layers + Legend) */
+.leaflet-bottom.leaflet-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 12px;
+
+  right: var(--spacing-md);
+  bottom: var(--spacing-md);
+}
+
+/* Remove default leaflet spacing */
+.leaflet-right .leaflet-control {
+  margin-right: 0;
+}
+
+.leaflet-top .leaflet-control,
+.leaflet-bottom .leaflet-control {
+  margin-bottom: 0;
+}
+
+/* ========================================
    RESPONSIVE
 ======================================== */
 

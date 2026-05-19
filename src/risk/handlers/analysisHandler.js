@@ -20,7 +20,8 @@ export function initializeAnalysisHandler({
     return;
   }
 
-  analyzeButton.addEventListener("click", () => {
+  // Prevent duplicate click handlers
+  analyzeButton.onclick = () => {
     clearValidationUI({
       validationMessage,
       propertyType,
@@ -56,9 +57,11 @@ export function initializeAnalysisHandler({
       selectedDocuments,
     });
 
-    if (!result.success) {
-      showMessage(validationMessage, result.message);
-
+    if (!result?.success) {
+      showMessage(
+        validationMessage,
+        result?.message || "Risk analysis failed.",
+      );
       return;
     }
 
@@ -73,7 +76,7 @@ export function initializeAnalysisHandler({
       reportSection,
       reportToggleBtn,
     });
-  });
+  };
 }
 
 // Form Data
@@ -85,7 +88,7 @@ function getFormData({
   seismicAssessment,
 }) {
   return {
-    pga: mapState.pga,
+    pga: mapState?.analysis?.pga ?? null,
     propertyType: propertyType?.value || null,
     buildingType: buildingTypeElement?.value || null,
     stories: storiesElement?.value || null,
@@ -96,9 +99,9 @@ function getFormData({
 // Selected Documents
 
 function getSelectedDocuments() {
-  return [...document.querySelectorAll(".document-item input:checked")].map(
-    (item) => item.value,
-  );
+  return Array.from(
+    document.querySelectorAll(".document-item input:checked"),
+  ).map((item) => item.value);
 }
 
 // Render Risk Report
@@ -116,9 +119,9 @@ function renderRiskReport({ riskResult, formData, result, selectedDocuments }) {
     propertyType: formData.propertyType,
     buildingType: formData.buildingType,
     stories: formData.stories,
-    seismicValue: formData.seismicValue,
+    hasExistingSeismicAssessment: formData.hasExistingSeismicAssessment,
     selectedDocuments,
-    nearestFault: mapState.nearestFault,
+    nearestFault: mapState?.analysis?.nearestFault ?? null,
   });
 }
 
@@ -131,6 +134,7 @@ function clearValidationUI({
   storiesElement,
 }) {
   showMessage(validationMessage, "");
+
   propertyType?.classList.remove("field-error");
   buildingTypeElement?.classList.remove("field-error");
   storiesElement?.classList.remove("field-error");
@@ -143,9 +147,9 @@ function showValidationError({
   buildingTypeElement,
   storiesElement,
 }) {
-  showMessage(validationMessage, validation.message);
+  showMessage(validationMessage, validation?.message || "Validation failed.");
 
-  switch (validation.field) {
+  switch (validation?.field) {
     case "propertyType":
       propertyType?.classList.add("field-error");
       break;
@@ -157,6 +161,9 @@ function showValidationError({
     case "stories":
       storiesElement?.classList.add("field-error");
       break;
+
+    default:
+      break;
   }
 }
 
@@ -167,7 +174,8 @@ function showMessage(element, message) {
     return;
   }
 
-  element.innerHTML = message;
+  // Safer than innerHTML
+  element.textContent = message;
 }
 
 // Expand Report Section

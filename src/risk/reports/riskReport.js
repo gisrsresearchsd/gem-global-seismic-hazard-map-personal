@@ -24,9 +24,9 @@ export function generateRiskReport({
 }) {
   const recommendationClass = getRecommendationClass(recommendationType);
 
-  const buildingLabel = formatBuildingType(buildingType);
+  const buildingLabel = formatBuildingType(buildingType) || "Unknown";
 
-  const faultLabel = formatFaultLabel(nearestFault);
+  const faultLabel = formatFaultLabel(nearestFault) || "Unknown";
 
   const reportRows = generateReportRows({
     pga,
@@ -58,22 +58,29 @@ export function generateRiskReport({
   `;
 }
 
-// Recommendation Section
-
+// Recommendation Section with Note Links
 function generateRecommendationSection({
   recommendation,
   recommendationClass,
 }) {
+  // First escape the HTML to prevent XSS
+  let recommendationHtml = escapeHtml(recommendation || "No Recommendation");
+  
+  // Replace "Note 1", "Note 2", etc. with clickable modal links
+  recommendationHtml = recommendationHtml.replace(
+    /(Note \d)/g,
+    function(match) {
+      const noteNumber = match;
+      // Use window.openNoteModal (now available globally)
+      return `<a href="#" onclick="window.openNoteModal('${noteNumber}'); return false;" class="note-link" style="color: #4ade80; text-decoration: underline; cursor: pointer; font-weight: 800; margin: 0 2px; display: inline-block;">${noteNumber}</a>`;
+    }
+  );
+  
   return `
     <div class="report-top-row">
-
-      <div class="
-        report-badge
-        ${recommendationClass}
-      ">
-        ${escapeHtml(recommendation)}
+      <div class="report-badge ${escapeHtml(recommendationClass || "")}">
+        ${recommendationHtml}
       </div>
-
     </div>
   `;
 }
@@ -91,29 +98,46 @@ function generateReportRows({
 }) {
   let rows = "";
 
+  const numericPga = Number(pga);
+
+  const formattedPga = Number.isFinite(numericPga)
+    ? `${numericPga.toFixed(4)} g`
+    : "Unavailable";
+
+  const storyCount = Number(stories);
+
+  const buildingHeight = Number.isFinite(storyCount)
+    ? `${storyCount} stor${storyCount === 1 ? "y" : "ies"}`
+    : "Unknown";
+
+  rows += createReportRow("Peak Ground Acceleration", formattedPga);
+
   rows += createReportRow(
-    "Peak Ground Acceleration",
-    `${Number(pga).toFixed(4)} g`,
+    "Seismic Hazard Level",
+    escapeHtml(seismicity || "Unknown"),
   );
 
-  rows += createReportRow("Seismic Hazard Level", escapeHtml(seismicity));
-
-  rows += createReportRow("Nearest Seismic Source", escapeHtml(faultLabel));
-
-  rows += createReportRow("Property Type", escapeHtml(propertyType));
-
-  rows += createReportRow("Structural System", escapeHtml(buildingLabel));
+  rows += createReportRow(
+    "Nearest Seismic Source",
+    escapeHtml(faultLabel || "Unknown"),
+  );
 
   rows += createReportRow(
-    "Building Height",
-    `${stories} story${stories !== 1 ? "s" : ""}`,
+    "Property Type",
+    escapeHtml(propertyType || "Unknown"),
   );
+
+  rows += createReportRow(
+    "Structural System",
+    escapeHtml(buildingLabel || "Unknown"),
+  );
+
+  rows += createReportRow("Building Height", buildingHeight);
 
   if (propertyType === PROPERTY_TYPES.LEASE_RENEWAL) {
     rows += createReportRow(
       "Existing Assessment",
-
-      hasExistingSeismicAssessment === "yes" ? "Available" : "Not Available",
+      hasExistingSeismicAssessment ? "Available" : "Not Available",
     );
   }
 
@@ -122,8 +146,9 @@ function generateReportRows({
 
 // Documents Section
 
-function generateDocumentsSection(selectedDocuments) {
-  const hasDocuments = selectedDocuments && selectedDocuments.length > 0;
+function generateDocumentsSection(selectedDocuments = []) {
+  const hasDocuments =
+    Array.isArray(selectedDocuments) && selectedDocuments.length > 0;
 
   if (!hasDocuments) {
     return `
@@ -146,12 +171,13 @@ function generateDocumentsSection(selectedDocuments) {
   }
 
   const documentItems = selectedDocuments
+    .filter(Boolean)
     .map(
       (doc) => `
-          <li>
-            ${escapeHtml(doc)}
-          </li>
-        `,
+        <li>
+          ${escapeHtml(doc)}
+        </li>
+      `,
     )
     .join("");
 

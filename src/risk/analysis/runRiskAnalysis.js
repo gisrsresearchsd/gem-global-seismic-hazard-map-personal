@@ -9,6 +9,7 @@ import {
 } from "./riskConstants";
 
 // Run Risk Analysis
+
 export function runRiskAnalysis({
   pga,
   propertyType,
@@ -17,17 +18,24 @@ export function runRiskAnalysis({
   hasExistingSeismicAssessment,
   selectedDocuments,
 }) {
+  // Normalize numeric inputs
+  const numericPga = Number(pga);
+  const storyCount = Number(stories);
+
   // Validation
   const validationError = validateAnalysisInput({
-    pga,
+    pga: numericPga,
     propertyType,
     buildingType,
-    stories,
+    stories: storyCount,
   });
 
   if (validationError) {
     return validationError;
   }
+
+  // Safe seismic classification
+  const seismicData = getSeismicClassification(numericPga);
 
   // Document Checks
   const {
@@ -37,15 +45,13 @@ export function runRiskAnalysis({
     hasAllTier3Documents,
     hasAnyTier3Documents,
     hasAnyRelevantDocuments,
-  } = getDocumentChecks(selectedDocuments);
+  } = getDocumentChecks(selectedDocuments || []);
 
   // Default Result
-  let result = {
-    recommendation:
-      "Available documentation is not sufficient. Please see Notes Sheet to see the list of required documentation for each type of analysis.",
-
-    recommendationType: RECOMMENDATION_TYPES.DEFAULT,
-  };
+  let result = createResult(
+    "Available documentation is not sufficient. Please see Notes Sheet to see the list of required documentation for each type of analysis.",
+    RECOMMENDATION_TYPES.DEFAULT,
+  );
 
   // Lease Renewal
   if (
@@ -78,16 +84,14 @@ export function runRiskAnalysis({
   else if (
     shouldRunTier3({
       buildingType,
-      pga,
-      stories,
+      pga: numericPga,
+      stories: storyCount,
     })
   ) {
     // Full Tier 3
-
     if (hasAllTier3Documents) {
       result = createResult(
         "ASCE41 Tier 3 - See Note 4",
-
         RECOMMENDATION_TYPES.TIER_3,
       );
     }
@@ -96,7 +100,6 @@ export function runRiskAnalysis({
     else if (hasAnyTier3Documents) {
       result = createResult(
         "ASCE41 Tier 3 - See Note 4 (Insufficient Document)",
-
         RECOMMENDATION_TYPES.TIER_3,
       );
     }
@@ -106,16 +109,14 @@ export function runRiskAnalysis({
   else if (
     shouldRunTier1({
       buildingType,
-      pga,
-      stories,
+      pga: numericPga,
+      stories: storyCount,
     })
   ) {
     // Valid Tier 1 Docs
-
     if (hasTier1Documents) {
       result = createResult(
         "ASCE41 Tier 1 - See Note 3",
-
         RECOMMENDATION_TYPES.TIER_1,
       );
     }
@@ -124,17 +125,15 @@ export function runRiskAnalysis({
     else if (hasAnyRelevantDocuments) {
       result = createResult(
         "ASCE41 Tier 1 - Insufficient Document",
-
         RECOMMENDATION_TYPES.TIER_1,
       );
     }
   }
 
   // Final Result
-
   return {
     success: true,
-    seismicity: getSeismicClassification(pga).label,
+    seismicity: seismicData?.label || "Unknown",
     recommendation: result.recommendation,
     recommendationType: result.recommendationType,
   };
@@ -143,22 +142,36 @@ export function runRiskAnalysis({
 // Validation
 
 function validateAnalysisInput({ pga, propertyType, buildingType, stories }) {
-  if (!propertyType || !buildingType || !stories) {
+  if (!propertyType || !buildingType) {
     return {
       success: false,
-
       message: "Please complete all required fields.",
     };
   }
 
-  if (isNaN(pga) || pga < RISK_THRESHOLDS.PGA_MINIMUM) {
+  if (!Number.isFinite(stories) || stories < 1) {
     return {
       success: false,
-
-      message: "PGA value is less than 0.01g",
+      message: "Please enter a valid number of stories.",
     };
   }
 
+  if (!Number.isFinite(pga)) {
+  return {
+    success: false,
+    message: "Please select the land area.",
+  };
+}
+
+if (
+  pga >= 0 &&
+  pga < RISK_THRESHOLDS.PGA_MINIMUM
+) {
+  return {
+    success: false,
+    message: "PGA value is less than 0.01g",
+  };
+}
   return null;
 }
 
@@ -167,7 +180,6 @@ function validateAnalysisInput({ pga, propertyType, buildingType, stories }) {
 function createResult(recommendation, recommendationType) {
   return {
     recommendation,
-
     recommendationType,
   };
 }
@@ -179,7 +191,6 @@ function shouldRunTier3({ buildingType, pga, stories }) {
     PGA_MINIMUM,
     PGA_MEDIUM,
     PGA_HIGH,
-
     RC_TIER3_STORIES_MODERATE,
     RC_TIER3_STORIES_HIGH,
   } = RISK_THRESHOLDS;
@@ -201,7 +212,6 @@ function shouldRunTier1({ buildingType, pga, stories }) {
     PGA_MINIMUM,
     PGA_MEDIUM,
     PGA_HIGH,
-
     RC_TIER1_STORIES_LOW,
     RC_TIER1_STORIES_HIGH,
   } = RISK_THRESHOLDS;

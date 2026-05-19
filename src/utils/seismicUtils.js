@@ -1,8 +1,23 @@
-// Get Seismic Classification
-export function getSeismicClassification(pga) {
-  // Invalid
+import { RISK_THRESHOLDS } from "../risk/analysis/riskConstants";
 
-  if (pga === null || isNaN(pga)) {
+// Get Seismic Classification
+
+export function getSeismicClassification(
+  pga,
+) {
+  const numericPga = Number(pga);
+
+  const {
+    PGA_MINIMUM,
+    PGA_MEDIUM,
+    PGA_HIGH,
+  } = RISK_THRESHOLDS;
+
+  // Invalid
+  if (
+    !Number.isFinite(numericPga) ||
+    numericPga < 0
+  ) {
     return {
       level: null,
       label: "No Data",
@@ -10,26 +25,35 @@ export function getSeismicClassification(pga) {
     };
   }
 
-  // Negligible
-  if (pga >= 0 && pga <= 0.01) {
-    return {
-      level: "negligible",
-      label: "Negligible",
-      colorClass: "negligible",
-    };
-  }
+  // Too Low (< 0.01)
+if (
+  numericPga >= 0 &&
+  numericPga < PGA_MINIMUM
+) {
+  return {
+    level: null,
+    label: "Below Threshold",
+    colorClass: "",
+  };
+}
 
-  // Low
-  if (pga > 0.01 && pga < 0.03) {
-    return {
-      level: "low",
-      label: "Low Risk",
-      colorClass: "low",
-    };
-  }
+// Low
+if (
+  numericPga >= PGA_MINIMUM &&
+  numericPga < PGA_MEDIUM
+) {
+  return {
+    level: "low",
+    label: "Low Risk",
+    colorClass: "low",
+  };
+}
 
   // Moderate
-  if (pga >= 0.03 && pga < 0.08) {
+  if (
+    numericPga >= PGA_MEDIUM &&
+    numericPga < PGA_HIGH
+  ) {
     return {
       level: "moderate",
       label: "Moderate Risk",

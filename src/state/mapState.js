@@ -17,6 +17,7 @@ export const mapState = {
     classification: null,
 
     nearestFault: null,
+    country: null,
   },
 
   // Map UI
@@ -51,25 +52,20 @@ export const mapState = {
 export function resetAnalysisState() {
   mapState.analysis.pga = null;
 
-  mapState.analysis.classification =
-    null;
+  mapState.analysis.classification = null;
 
-  mapState.analysis.nearestFault =
-    null;
+  mapState.analysis.nearestFault = null;
+  mapState.analysis.country = null;
 }
 
 // Reset UI State
 
 export function resetUIState() {
-  mapState.ui.selectedMarker =
-    null;
+  mapState.ui.selectedMarker = null;
 
-  mapState.ui.activePopup =
-    null;
+  mapState.ui.activePopup = null;
 
-  mapState.ui.faultConnectionLine =
-    null;
+  mapState.ui.faultConnectionLine = null;
 
-  mapState.ui.searchMarker =
-    null;
+  mapState.ui.searchMarker = null;
 }
