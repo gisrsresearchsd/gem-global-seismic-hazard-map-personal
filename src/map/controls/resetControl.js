@@ -1,41 +1,78 @@
-import L from 'leaflet';
+import L from "leaflet";
 
-import {
-  APP_CONFIG,
-} from '../../config/appConfig';
+import { APP_CONFIG } from "../../config/appConfig";
 
-import {
-  mapState,
-} from '../../state/mapState';
+import { mapState } from "../../state/mapState";
+
+import { BASE_MAPS } from "../basemaps/baseMaps";
 
 // Create Reset Control
 export function createResetControl(map) {
-
   const resetControl = L.control({
-    position: 'topright',
+    position: "topright",
   });
 
   resetControl.onAdd = function () {
-    const container = L.DomUtil.create('div', 'reset-control');
-    container.innerHTML = 'Reset View';
+    const container = L.DomUtil.create("div", "reset-control");
+
+    container.innerHTML = "Reset View";
 
     L.DomEvent.disableClickPropagation(container);
 
-    container.addEventListener('click', () => {
+    container.addEventListener("click", () => {
+      // =========================
+      // Reset Basemap To Default
+      // =========================
+
+      Object.values(BASE_MAPS).forEach((layer) => {
+        if (map.hasLayer(layer)) {
+          map.removeLayer(layer);
+        }
+      });
+
+      BASE_MAPS[APP_CONFIG.MAP.DEFAULT_BASEMAP].addTo(map);
+
+      // Bring overlays back to front
+
+      map.eachLayer((layer) => {
+        if (layer.options && layer.options.pane === "overlayPane") {
+          if (layer.bringToFront) {
+            layer.bringToFront();
+          }
+        }
+      });
+
+      // =========================
+      // Reset Basemap Button UI
+      // =========================
+
+      document.querySelectorAll(".basemap-btn").forEach((btn) => {
+        btn.classList.remove("active");
+
+        if (btn.innerHTML.trim() === APP_CONFIG.MAP.DEFAULT_BASEMAP) {
+          btn.classList.add("active");
+        }
+      });
+
+      // =========================
       // Reset Map View
-      map.flyTo(
-        APP_CONFIG.MAP.CENTER,
-        APP_CONFIG.MAP.DEFAULT_ZOOM,
-        { duration: 1.2, easeLinearity: 0.5 }
-      );
+      // =========================
+
+      map.flyTo(APP_CONFIG.MAP.CENTER, APP_CONFIG.MAP.DEFAULT_ZOOM, {
+        duration: 1.2,
+        easeLinearity: 0.5,
+      });
 
       // Clear ALL markers from map
+
       clearAllMarkers(map);
-      
-      // Clear fault distance line and stop animation
+
+      // Clear fault distance line
+
       clearFaultDistanceLine(map);
 
       // Reset Map State
+
       mapState.lat = null;
       mapState.lng = null;
       mapState.pga = null;
@@ -48,40 +85,70 @@ export function createResetControl(map) {
       mapState.isAnalyzing = false;
 
       // Reset PGA Display
-      const riskPGAElement = document.getElementById('riskPGA');
-      if (riskPGAElement) riskPGAElement.innerHTML = '--';
+
+      const riskPGAElement = document.getElementById("riskPGA");
+
+      if (riskPGAElement) {
+        riskPGAElement.innerHTML = "--";
+      }
 
       // Reset Risk Badge
-      const riskLevel = document.getElementById('riskLevel');
+
+      const riskLevel = document.getElementById("riskLevel");
+
       if (riskLevel) {
-        riskLevel.className = 'risk-badge';
-        riskLevel.innerHTML = 'No Data';
+        riskLevel.className = "risk-badge";
+
+        riskLevel.innerHTML = "No Data";
       }
 
       // Reset Fault Display
-      const riskFaultElement = document.getElementById('riskFault');
-      if (riskFaultElement) riskFaultElement.innerHTML = '--';
+
+      const riskFaultElement = document.getElementById("riskFault");
+
+      if (riskFaultElement) {
+        riskFaultElement.innerHTML = "--";
+      }
 
       // Reset Report
-      const riskResultElement = document.getElementById('riskResult');
-      if (riskResultElement) riskResultElement.innerHTML = 'No analysis yet';
+
+      const riskResultElement = document.getElementById("riskResult");
+
+      if (riskResultElement) {
+        riskResultElement.innerHTML = "No analysis yet";
+      }
 
       // Reset All Form Fields
+
       resetFormFields();
 
       // Reset Document Checkboxes
+
       resetDocumentCheckboxes();
 
       // Hide Dynamic Sections
+
       hideDynamicSections();
 
       // Close any open popups
+
       map.closePopup();
 
-      // Remove any CSS animations from distance line
+      // Remove CSS animations
+
       removeDistanceLineAnimations();
 
-      console.log('Reset completed - All data and animations cleared');
+      // =========================
+      // Reset Attribution Panel
+      // =========================
+
+      const attributionPanel = document.querySelector(".map-attribution-panel");
+
+      if (attributionPanel) {
+        attributionPanel.removeAttribute("open");
+      }
+
+      console.log("Reset completed - Default basemap restored");
     });
 
     return container;
@@ -91,118 +158,169 @@ export function createResetControl(map) {
 }
 
 // Clear all markers from map
+
 function clearAllMarkers(map) {
   const layersToRemove = [];
-  
+
   map.eachLayer((layer) => {
-    // Remove all circle markers (search/click markers)
+    // Remove Circle Markers
+
     if (layer instanceof L.CircleMarker) {
       layersToRemove.push(layer);
     }
-    // Remove custom markers
+
+    // Remove Standard Markers
+
     if (layer instanceof L.Marker) {
       layersToRemove.push(layer);
     }
-    // Remove polylines (fault distance lines)
+
+    // Remove Polylines
+
     if (layer instanceof L.Polyline) {
       layersToRemove.push(layer);
     }
   });
-  
-  layersToRemove.forEach(layer => {
+
+  layersToRemove.forEach((layer) => {
     if (map.hasLayer(layer)) {
       map.removeLayer(layer);
     }
   });
 }
 
-// Clear fault distance line and stop animation
+// Clear fault distance line
+
 function clearFaultDistanceLine(map) {
-  // Clear from window object
+  // Clear active line
+
   if (window.activeDistanceLine) {
     if (map.hasLayer(window.activeDistanceLine)) {
       map.removeLayer(window.activeDistanceLine);
     }
+
     window.activeDistanceLine = null;
   }
-  
-  // Clear from any other references
+
+  // Clear secondary reference
+
   if (window.faultDistanceLine) {
     if (map.hasLayer(window.faultDistanceLine)) {
       map.removeLayer(window.faultDistanceLine);
     }
+
     window.faultDistanceLine = null;
   }
-  
-  // Update mapState
+
+  // Reset state
+
   mapState.faultConnectionLine = null;
+
   mapState.nearestFault = null;
 }
 
-// Remove any CSS animations from distance line elements
+// Remove animations
+
 function removeDistanceLineAnimations() {
-  // Find any elements with fault-distance-line class and remove animation
-  const animatedLines = document.querySelectorAll('.fault-distance-line');
-  animatedLines.forEach(line => {
-    line.style.animation = 'none';
-    // Force reflow to stop animation
+  const animatedLines = document.querySelectorAll(".fault-distance-line");
+
+  animatedLines.forEach((line) => {
+    line.style.animation = "none";
+
+    // Force reflow
+
     line.offsetHeight;
   });
 }
 
-// Reset all form fields to empty/default state
+// Reset form fields
+
 function resetFormFields() {
   // Property Type
-  const propertyType = document.getElementById('propertyType');
-  if (propertyType) propertyType.value = '';
+
+  const propertyType = document.getElementById("propertyType");
+
+  if (propertyType) {
+    propertyType.value = "";
+  }
 
   // Building Type
-  const buildingType = document.getElementById('buildingType');
-  if (buildingType) buildingType.value = '';
+
+  const buildingType = document.getElementById("buildingType");
+
+  if (buildingType) {
+    buildingType.value = "";
+  }
 
   // Building Stories
-  const buildingStories = document.getElementById('buildingStories');
-  if (buildingStories) buildingStories.value = '';
+
+  const buildingStories = document.getElementById("buildingStories");
+
+  if (buildingStories) {
+    buildingStories.value = "";
+  }
 
   // Seismic Assessment
-  const seismicAssessmentDone = document.getElementById('seismicAssessmentDone');
-  if (seismicAssessmentDone) seismicAssessmentDone.value = '';
 
-  // Search input (if exists)
-  const searchInput = document.querySelector('.search-input');
-  if (searchInput) searchInput.value = '';
+  const seismicAssessmentDone = document.getElementById(
+    "seismicAssessmentDone",
+  );
+
+  if (seismicAssessmentDone) {
+    seismicAssessmentDone.value = "";
+  }
+
+  // Search Input
+
+  const searchInput = document.querySelector(".search-input");
+
+  if (searchInput) {
+    searchInput.value = "";
+  }
 }
 
-// Reset all document checkboxes
+// Reset document checkboxes
+
 function resetDocumentCheckboxes() {
-  const checkboxes = document.querySelectorAll('.document-item input[type="checkbox"]');
+  const checkboxes = document.querySelectorAll(
+    '.document-item input[type="checkbox"]',
+  );
+
   checkboxes.forEach((checkbox) => {
     checkbox.checked = false;
   });
 }
 
 // Hide dynamic sections
+
 function hideDynamicSections() {
-  // Hide lease renewal question section
-  const leaseRenewalQuestion = document.getElementById('leaseRenewalQuestion');
+  // Lease Renewal Section
+
+  const leaseRenewalQuestion = document.getElementById("leaseRenewalQuestion");
+
   if (leaseRenewalQuestion) {
-    leaseRenewalQuestion.classList.add('hidden');
+    leaseRenewalQuestion.classList.add("hidden");
   }
 
-  // Hide documents section
-  const documentsSection = document.getElementById('documentsSection');
+  // Documents Section
+
+  const documentsSection = document.getElementById("documentsSection");
+
   if (documentsSection) {
-    documentsSection.classList.add('hidden');
+    documentsSection.classList.add("hidden");
   }
 
-  // Reset document toggle button icon if collapsed
-  const documentList = document.getElementById('documentList');
-  const toggleIcon = document.getElementById('documentToggleIcon');
-  
-  if (documentList && !documentList.classList.contains('collapsed')) {
-    documentList.classList.add('collapsed');
+  // Reset document list state
+
+  const documentList = document.getElementById("documentList");
+
+  const toggleIcon = document.getElementById("documentToggleIcon");
+
+  if (documentList && !documentList.classList.contains("collapsed")) {
+    documentList.classList.add("collapsed");
   }
+
   if (toggleIcon) {
-    toggleIcon.innerHTML = '+';
+    toggleIcon.innerHTML = "+";
   }
 }

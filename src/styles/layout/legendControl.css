@@ -1,5 +1,5 @@
 /* ========================================
-   HAZARD LEGEND - PROFESSIONAL
+   HAZARD LEGEND
 ======================================== */
 
 /* Legend Container */
@@ -46,12 +46,11 @@
   transform: translateX(2px);
 }
 
-/* Last Row */
 .legend-row:last-child {
   margin-bottom: 0;
 }
 
-/* Color Indicator - Enhanced */
+/* Color Indicator */
 .legend-color {
   width: 28px;
   height: 12px;
@@ -75,7 +74,7 @@
 }
 
 /* ========================================
-   MOBILE
+   RESPONSIVE
 ======================================== */
 
 @media (max-width: 768px) {

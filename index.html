@@ -7,45 +7,30 @@
     <title>GEM Global Seismic Hazard Map</title>
   </head>
   <body>
-    <!-- Application Wrapper -->
-
     <div class="app-container">
-      <!-- Header -->
-
       <header class="app-header">
         <h1>Global Seismic Hazard Map</h1>
-        <span class="header-subtitle"> Version:X.X </span>
+        <span class="header-subtitle"> Version:1.0 </span>
       </header>
 
-      <!-- Main Content -->
-
       <main class="app-main">
-        <!-- Left Panel -->
         <aside class="left-panel">
-          <!-- Risk Panel Wrapper -->
-
           <div class="risk-panel-wrapper">
-            <!-- TITLE -->
-
-            <h2 class="panel-title">Risk Analysis</h2>
-
             <div class="risk-form-section">
+              <h2 class="panel-title">Risk Analysis</h2>
               <div class="risk-panel">
                 <!-- PGA Information -->
                 <div class="risk-info-group">
                   <div class="risk-info-card">
                     <span class="risk-info-label"> PGA Value </span>
-
                     <div class="risk-value-row">
                       <span class="risk-info-value" id="riskPGA"> -- </span>
-
                       <span class="risk-badge" id="riskLevel"> No Data </span>
                     </div>
                   </div>
 
                   <div class="risk-info-card">
                     <span class="risk-info-label"> Nearest Fault </span>
-
                     <span class="risk-info-value danger" id="riskFault">
                       --
                     </span>
@@ -53,19 +38,14 @@
                 </div>
 
                 <!-- Property Type -->
-
                 <div class="form-group">
                   <label for="propertyType"> Property Type </label>
-
                   <select id="propertyType">
                     <option value="" selected disabled>
                       Select property type
                     </option>
-
                     <option value="New Lease">New Lease</option>
-
                     <option value="Lease Renewal">Lease Renewal</option>
-
                     <option value="Building Acquisition">
                       Building Acquisition
                     </option>
@@ -73,47 +53,37 @@
                 </div>
 
                 <!-- Seismic Question -->
-
                 <div class="form-group hidden" id="leaseRenewalQuestion">
-                  <label for="seismicAssessmentDone">
-                    Existing seismic assessment?
-                  </label>
-
+                  <label for="seismicAssessmentDone"
+                    >Existing seismic assessment?</label
+                  >
                   <select id="seismicAssessmentDone">
                     <option value="" selected disabled>Select option</option>
-
                     <option value="yes">Yes</option>
-
                     <option value="no">No</option>
                   </select>
                 </div>
 
                 <!-- Documents -->
-
                 <div class="form-group hidden" id="documentsSection">
                   <label> Available Documents </label>
-
                   <button
                     type="button"
                     class="document-toggle-btn"
                     id="documentToggleBtn"
                   >
                     <span> Select Available Documents </span>
-
                     <span id="documentToggleIcon"> + </span>
                   </button>
-
                   <div class="document-list collapsed" id="documentList">
                     <label class="document-item">
                       <input type="checkbox" value="Structural design report" />
                       <span> Structural design report </span>
                     </label>
-
                     <label class="document-item">
                       <input type="checkbox" value="Architectural drawings" />
                       <span> Architectural drawings </span>
                     </label>
-
                     <label class="document-item">
                       <input
                         type="checkbox"
@@ -121,17 +91,15 @@
                       />
                       <span> Structural as-built drawings </span>
                     </label>
-
                     <label class="document-item">
                       <input
                         type="checkbox"
-                        value="loor plan showing structural columns and walls location"
+                        value="Floor plan showing structural columns and walls location"
                       />
                       <span>
                         Floor plan showing structural columns and walls location
                       </span>
                     </label>
-
                     <label class="document-item">
                       <input
                         type="checkbox"
@@ -141,7 +109,6 @@
                         Digital structural model (ETABS or equivalent)
                       </span>
                     </label>
-
                     <label class="document-item">
                       <input
                         type="checkbox"
@@ -149,7 +116,6 @@
                       />
                       <span> Inspection/material testing reports </span>
                     </label>
-
                     <label class="document-item">
                       <input
                         type="checkbox"
@@ -157,7 +123,6 @@
                       />
                       <span> Building maintenance records </span>
                     </label>
-
                     <label class="document-item">
                       <input
                         type="checkbox"
@@ -168,7 +133,6 @@
                         documentation
                       </span>
                     </label>
-
                     <label class="document-item">
                       <input type="checkbox" value="Geotechnical report" />
                       <span> Geotechnical report </span>
@@ -177,26 +141,20 @@
                 </div>
 
                 <!-- Building Type -->
-
                 <div class="form-group">
                   <label for="buildingType"> Building Type </label>
-
                   <select id="buildingType">
                     <option value="" selected disabled>
                       Select building type
                     </option>
-
                     <option value="URM">Unreinforced Masonry / Wood</option>
-
                     <option value="RC">RC Frame / Shear Wall / Steel</option>
                   </select>
                 </div>
 
                 <!-- Stories -->
-
                 <div class="form-group">
                   <label for="buildingStories"> Number of Stories </label>
-
                   <input
                     type="number"
                     id="buildingStories"
@@ -206,32 +164,103 @@
                 </div>
               </div>
             </div>
-            <!-- Analyze -->
+
+            <!-- Analyze Button -->
             <div class="risk-action-section">
               <button id="analyzeBtn" class="analyze-btn">Analyze Risk</button>
+              <div id="validationMessage" class="validation-message"></div>
             </div>
 
-            <!-- =========================================
-       Report Section
-  ========================================== -->
-
+            <!-- Report Section with Toggle -->
             <div class="risk-report-section">
-              <div class="report-header">Analysis Report</div>
-
+              <div class="report-header">
+                <span>Analysis Report</span>
+                <button class="report-toggle-btn" id="reportToggleBtn">
+                  −
+                </button>
+              </div>
               <div class="report-content" id="riskResult">No analysis yet</div>
             </div>
           </div>
         </aside>
 
-        <!-- Map Area -->
-
         <section class="map-section">
           <div id="map"></div>
-
-          <!-- Coordinate Control Anchor -->
-
           <div class="map-coordinate-anchor">
             <div class="coordinate-control">Lat: 0.0000 | Lng: 0.0000</div>
+          </div>
+          <div class="map-attribution-container">
+            <details class="map-attribution-panel">
+              <summary class="map-attribution-header">
+                Data Sources & Attribution
+              </summary>
+
+              <div class="map-attribution-content">
+                <div class="map-attribution-item">
+                  <div class="map-attr-title">Seismic Hazard Model</div>
+
+                  <div class="map-attr-description">
+                    GEM Foundation Global Seismic Hazard Model (Version 2023.1)
+                  </div>
+
+                  <a
+                    href="https://doi.org/10.5281/zenodo.8409647"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    DOI Reference
+                  </a>
+                </div>
+
+                <div class="map-attribution-item">
+                  <div class="map-attr-title">Active Fault Database</div>
+
+                  <div class="map-attr-description">
+                    GEM Global Active Faults dataset used for nearest fault
+                    calculations.
+                  </div>
+
+                  <a
+                    href="https://github.com/GEMScienceTools/gem-global-active-faults"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source Repository
+                  </a>
+                </div>
+
+                <div class="map-attribution-item">
+                  <div class="map-attr-title">Country Boundaries</div>
+
+                  <div class="map-attr-description">
+                    GeoJSON administrative country boundaries.
+                  </div>
+
+                  <a
+                    href="https://github.com/datasets/geo-countries"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Dataset Source
+                  </a>
+                </div>
+
+                <div class="map-attribution-item">
+                  <div class="map-attr-title">Maps & Geocoding</div>
+
+                  <div class="map-attr-description">
+                    OpenStreetMap, CartoDB, Esri basemaps and Nominatim
+                    geocoding services.
+                  </div>
+                </div>
+
+                <div class="map-attribution-note">
+                  This application is intended for preliminary screening and
+                  research purposes only and should not replace detailed
+                  engineering assessment.
+                </div>
+              </div>
+            </details>
           </div>
         </section>
       </main>

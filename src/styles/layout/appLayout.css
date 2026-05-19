@@ -1,9 +1,8 @@
 /* ========================================
-   APPLICATION LAYOUT - PROFESSIONAL
+   APPLICATION LAYOUT
 ======================================== */
 
 /* Main Application Container */
-
 .app-container {
   display: flex;
   flex-direction: column;
@@ -28,7 +27,6 @@
 }
 
 /* Main Content Area */
-
 .app-main {
   flex: 1;
   display: flex;
@@ -39,15 +37,17 @@
 }
 
 /* ========================================
-   TABLET + MOBILE
+   RESPONSIVE BREAKPOINTS
 ======================================== */
 
+/* Tablet */
 @media (max-width: 1024px) {
   .app-main {
     flex-direction: column;
   }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
   .app-container {
     height: 100dvh;

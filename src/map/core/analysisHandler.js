@@ -1,22 +1,19 @@
-import L from "leaflet";
+// analysisHandler.js - Add zoom-aware analysis
 
-import { getPGAValue } from "../layers/pgaLayer";
+import L from "leaflet";
+import { getPGAValue, isValidZoomForPGA, getZoomRecommendation } from "../layers/pgaLayer";
 import { getNearestFault } from "../layers/faultLayer";
 import { getSeismicClassification } from "../../utils/seismicUtils";
 import { mapState } from "../../state/mapState";
 
-// UI Elements
 const riskPGA = document.getElementById("riskPGA");
 const riskLevel = document.getElementById("riskLevel");
 const riskFault = document.getElementById("riskFault");
 
-// Active marker references
 let activeMarker = null;
 let activePulseMarker = null;
 
-// Create consistent marker style
 function createLocationMarker(lat, lng, map) {
-  // Remove existing marker completely
   if (activeMarker) {
     map.removeLayer(activeMarker);
     activeMarker = null;
@@ -26,7 +23,6 @@ function createLocationMarker(lat, lng, map) {
     activePulseMarker = null;
   }
 
-  // Create main marker
   const marker = L.circleMarker([lat, lng], {
     radius: 10,
     color: '#ffffff',
@@ -36,7 +32,6 @@ function createLocationMarker(lat, lng, map) {
     pane: 'overlayPane',
   });
 
-  // Create pulse effect marker
   const pulseMarker = L.circleMarker([lat, lng], {
     radius: 20,
     color: '#0066b3',
@@ -49,7 +44,6 @@ function createLocationMarker(lat, lng, map) {
   marker.addTo(map);
   pulseMarker.addTo(map);
 
-  // Remove pulse after animation
   setTimeout(() => {
     if (pulseMarker) {
       map.removeLayer(pulseMarker);
@@ -59,14 +53,39 @@ function createLocationMarker(lat, lng, map) {
 
   activeMarker = marker;
   activePulseMarker = pulseMarker;
-
   return marker;
 }
 
-// Analyze Location
+// Updated analyzeLocation with zoom awareness
 export async function analyzeLocation(map, lat, lng) {
   try {
-    // Remove existing marker before adding new one
+    // Get current zoom level
+    const currentZoom = map.getZoom();
+    
+    // Check if zoom is valid for PGA query
+    if (!isValidZoomForPGA(currentZoom)) {
+      const zoomWarning = getZoomRecommendation(currentZoom);
+      
+      // Update UI with zoom warning
+      riskPGA.innerHTML = "--";
+      riskLevel.className = "risk-badge";
+      riskLevel.innerHTML = "Zoom In Required";
+      riskFault.innerHTML = "--";
+      
+      // Show warning popup
+      map.closePopup();
+      L.popup()
+        .setLatLng([lat, lng])
+        .setContent(`⚠️ ${zoomWarning.message}`)
+        .openOn(map);
+      
+      // Still add marker but don't query PGA
+      createLocationMarker(lat, lng, map);
+      updateMapStateLocation(lat, lng, null, null, null);
+      return;
+    }
+
+    // Remove existing marker
     if (activeMarker) {
       map.removeLayer(activeMarker);
       activeMarker = null;
@@ -76,46 +95,50 @@ export async function analyzeLocation(map, lat, lng) {
       activePulseMarker = null;
     }
     
-    // Add marker for clicked location
     createLocationMarker(lat, lng, map);
 
-    // PGA
-    const pgaValue = await getPGAValue(lat, lng);
-
-    // Fault
+    // Pass zoom level to PGA query
+    const pgaValue = await getPGAValue(lat, lng, currentZoom);
     const nearestFault = getNearestFault(map, lat, lng);
 
-    // No Data
     if (pgaValue === null || isNaN(pgaValue)) {
       resetAnalysisUI();
       updateMapStateLocation(lat, lng, null, null, nearestFault);
+      
+      // Show zoom recommendation if applicable
+      const zoomRec = getZoomRecommendation(currentZoom);
+      if (zoomRec.message) {
+        showInfoPopup(map, lat, lng, `ℹ️ ${zoomRec.message}`);
+      }
       return;
     }
 
-    // Classification
     const classification = getSeismicClassification(pgaValue);
-
-    // Formatted PGA
     const formattedPGA = Number(pgaValue).toFixed(4);
 
-    // Update State
     updateMapStateLocation(lat, lng, pgaValue, classification, nearestFault);
-
-    // Update UI
-    updateAnalysisUI({
-      formattedPGA,
-      classification,
-      nearestFault,
-    });
-
-    // Simple popup with just PGA value
-    showSimplePopup(map, lat, lng, formattedPGA);
+    updateAnalysisUI({ formattedPGA, classification, nearestFault });
+    
+    // Show PGA popup with zoom info
+    const popupContent = currentZoom < 6 
+      ? `${formattedPGA} g (approx - zoom ${currentZoom})`
+      : `${formattedPGA} g`;
+    showSimplePopup(map, lat, lng, popupContent);
+    
   } catch (error) {
     console.error("Location analysis failed:", error);
   }
 }
 
-// Update map state location
+// Helper to show info popup
+function showInfoPopup(map, lat, lng, message) {
+  map.closePopup();
+  L.popup()
+    .setLatLng([lat, lng])
+    .setContent(message)
+    .openOn(map);
+}
+
 function updateMapStateLocation(lat, lng, pga, classification, nearestFault) {
   mapState.lat = lat;
   mapState.lng = lng;
@@ -124,32 +147,20 @@ function updateMapStateLocation(lat, lng, pga, classification, nearestFault) {
   mapState.nearestFault = nearestFault;
 }
 
-// Update Analysis UI
 function updateAnalysisUI({ formattedPGA, classification, nearestFault }) {
-  // PGA
   riskPGA.innerHTML = `${formattedPGA} g`;
-
-  // Reset Badge
   riskLevel.className = "risk-badge";
-
-  // Risk Class
+  
   if (classification.colorClass) {
     riskLevel.classList.add(classification.colorClass);
   }
-
-  // Risk Label
+  
   riskLevel.innerHTML = classification.label;
-
-  // Fault
   riskFault.innerHTML = nearestFault
-    ? `
-        ${nearestFault.name}
-        (${nearestFault.distance.toFixed(2)} km)
-      `
+    ? `${nearestFault.name} (${nearestFault.distance.toFixed(2)} km)`
     : "--";
 }
 
-// Reset UI
 function resetAnalysisUI() {
   riskPGA.innerHTML = "--";
   riskLevel.className = "risk-badge";
@@ -157,18 +168,14 @@ function resetAnalysisUI() {
   riskFault.innerHTML = "--";
 }
 
-// Simple popup without extra text
 function showSimplePopup(map, lat, lng, formattedPGA) {
-  // Close any existing popup
   map.closePopup();
-  
   L.popup()
     .setLatLng([lat, lng])
-    .setContent(`${formattedPGA} g`)
+    .setContent(formattedPGA)
     .openOn(map);
 }
 
-// Export marker removal function
 export function clearLocationMarker(map) {
   if (activeMarker) {
     map.removeLayer(activeMarker);

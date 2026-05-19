@@ -1,15 +1,14 @@
 /* ========================================
-   APPLICATION HEADER - PROFESSIONAL
+   APPLICATION HEADER
 ======================================== */
 
 /* Header */
-
 .app-header {
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 var(--spacing-lg);
   background: rgba(7, 12, 21, 0.85);
   border-bottom: 1px solid var(--border-color);
   backdrop-filter: blur(20px);
@@ -19,7 +18,7 @@
   z-index: var(--z-sidebar);
 }
 
-/* Header Logo/Gradient Accent */
+/* Header Gradient Accent */
 .app-header::before {
   content: '';
   position: absolute;
@@ -31,7 +30,6 @@
 }
 
 /* Title */
-
 .app-header h1 {
   margin: 0;
   font-size: 20px;
@@ -46,9 +44,8 @@
 }
 
 /* Subtitle */
-
 .app-header .header-subtitle {
-  margin-left: 12px;
+  margin-left: var(--spacing-sm);
   font-size: 12px;
   font-weight: 500;
   color: var(--text-muted);
@@ -59,29 +56,27 @@
   border: 1px solid var(--border-color);
 }
 
-/* Header Left */
-
+/* Header Sections */
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
-/* Header Right (if needed) */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-sm);
 }
 
 /* ========================================
-   MOBILE
+   RESPONSIVE
 ======================================== */
 
 @media (max-width: 768px) {
   .app-header {
     height: 56px;
-    padding: 0 16px;
+    padding: 0 var(--spacing-md);
   }
 
   .app-header h1 {
