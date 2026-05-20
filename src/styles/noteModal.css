@@ -1,0 +1,188 @@
+/* src/styles/noteModal.css */
+
+/* ========================================
+   NOTE MODAL STYLES
+======================================== */
+
+.note-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.note-modal-content {
+  position: relative;
+  background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%);
+  margin: 5% auto;
+  padding: 0;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  animation: modalSlideIn 0.3s ease;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.note-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 102, 179, 0.1);
+}
+
+.note-modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fff, #e2e8f0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.note-modal-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.note-modal-close:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+.note-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.note-modal-body h2 {
+  color: #00a8e8;
+  font-size: 18px;
+  margin: 20px 0 12px 0;
+}
+
+.note-modal-body h3 {
+  color: var(--text-primary);
+  font-size: 16px;
+  margin: 16px 0 10px 0;
+}
+
+.note-modal-body ul {
+  margin: 10px 0;
+  padding-left: 24px;
+}
+
+.note-modal-body li {
+  margin: 8px 0;
+}
+
+.note-modal-body .required-docs {
+  background: rgba(34, 197, 94, 0.1);
+  border-left: 3px solid #22c55e;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+.note-modal-body .additional-docs {
+  background: rgba(0, 168, 232, 0.1);
+  border-left: 3px solid #00a8e8;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+.note-modal-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.note-modal-body th,
+.note-modal-body td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.note-modal-body th {
+  background: rgba(0, 102, 179, 0.3);
+  font-weight: 600;
+}
+
+/* Scrollbar */
+.note-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.note-modal-body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.note-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .note-modal-content {
+    width: 95%;
+    margin: 10% auto;
+    max-height: 80vh;
+  }
+  
+  .note-modal-header {
+    padding: 16px 20px;
+  }
+  
+  .note-modal-body {
+    padding: 16px;
+  }
+  
+  .note-modal-body th,
+  .note-modal-body td {
+    padding: 8px;
+    font-size: 12px;
+  }
+}

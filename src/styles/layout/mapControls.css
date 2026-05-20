@@ -1,0 +1,355 @@
+/* ========================================
+   MAP CONTROLS
+======================================== */
+
+/* ========================================
+   TOP LEFT CONTROL CONTAINER
+======================================== */
+
+.leaflet-top.leaflet-left {
+  display: flex;
+
+  flex-direction: row;
+
+  align-items: flex-start;
+
+  gap: var(--spacing-sm);
+
+  margin: 10px;
+}
+
+/* ========================================
+   SHARED MAP CONTROL SURFACE
+======================================== */
+
+.coordinate-control,
+.leaflet-control-scale-line,
+.leaflet-control-zoom a,
+.custom-basemap-control,
+.map-attribution-panel {
+  background: var(--bg-control);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid var(--border-color);
+
+  color: var(--text-primary);
+
+  box-shadow: var(--shadow-md);
+
+  transition: all var(--transition-fast);
+}
+
+/* ========================================
+   ZOOM CONTROL
+======================================== */
+
+.leaflet-control-zoom {
+  border: none !important;
+
+  overflow: hidden;
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-lg);
+}
+
+.leaflet-control-zoom a {
+  width: 38px;
+
+  height: 38px;
+
+  line-height: 38px;
+
+  font-size: 18px;
+
+  font-weight: 500;
+
+  border: none !important;
+}
+
+.leaflet-control-zoom a:first-child {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.leaflet-control-zoom a:last-child {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.leaflet-control-zoom a:hover {
+  background: var(--bg-hover);
+
+  color: var(--primary-light);
+}
+
+.leaflet-control-zoom a:active {
+  transform: scale(0.96);
+}
+
+/* ========================================
+   SCALE CONTROL
+======================================== */
+
+.leaflet-bottom.leaflet-left {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  left: var(--spacing-md);
+
+  bottom: var(--spacing-md);
+}
+
+.leaflet-left .leaflet-control {
+  margin-left: 0;
+}
+
+.leaflet-bottom .leaflet-control {
+  margin-bottom: 0;
+}
+
+.leaflet-control-scale {
+  margin: 0 !important;
+}
+
+.leaflet-control-scale-line {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 34px;
+
+  padding: 0 14px;
+
+  border-radius: var(--radius-xl);
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+
+  font-family: 'SF Mono', 'Inter', sans-serif;
+
+  color: var(--text-primary);
+
+  text-rendering: geometricPrecision;
+
+  -webkit-font-smoothing: antialiased;
+
+  transform: translateZ(0);
+
+  opacity: 0.96;
+}
+
+.leaflet-control-scale-line:not(:first-child) {
+  border-top: none;
+
+  margin-top: 6px;
+}
+
+/* ========================================
+   COORDINATE CONTROL
+======================================== */
+
+.coordinate-control {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 34px;
+
+  padding: 0 var(--spacing-md);
+
+  border-radius: var(--radius-xl);
+
+  white-space: nowrap;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.3px;
+
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ========================================
+   FAULT DISTANCE LINE
+======================================== */
+
+.fault-distance-line {
+  animation: dashMove 1.2s linear infinite;
+}
+
+@keyframes dashMove {
+  from {
+    stroke-dashoffset: 20;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ========================================
+   LEAFLET POPUP
+======================================== */
+
+.leaflet-popup-content-wrapper {
+  background: var(--bg-control);
+
+  backdrop-filter: blur(12px);
+
+  border-radius: var(--radius-md);
+
+  border: 1px solid var(--border-color);
+
+  box-shadow: var(--shadow-lg);
+
+  color: var(--text-primary);
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-control);
+
+  border: 1px solid var(--border-color);
+}
+
+.leaflet-popup-content {
+  margin: var(--spacing-sm) var(--spacing-md);
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+/* ========================================
+   ZOOM GUIDANCE CONTROL
+======================================== */
+
+.zoom-guidance-control {
+  position: absolute;
+
+  top: 52px;
+
+  left: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  min-height: 30px;
+
+  padding: 0 12px;
+
+  border-radius: var(--radius-xl);
+
+  white-space: nowrap;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.3px;
+
+  background: var(--bg-control);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid var(--border-color);
+
+  box-shadow: var(--shadow-md);
+
+  color: var(--text-primary);
+
+  transition: all var(--transition-fast);
+
+  z-index: 1200;
+}
+
+/* ========================================
+   RIGHT SIDE CONTROL CONTAINERS
+======================================== */
+
+/* Top-right controls (Basemap + Reset) */
+.leaflet-top.leaflet-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 12px;
+
+  right: var(--spacing-md);
+  top: 10px;
+}
+
+/* Bottom-right controls (Layers + Legend) */
+.leaflet-bottom.leaflet-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 12px;
+
+  right: var(--spacing-md);
+  bottom: var(--spacing-md);
+}
+
+/* Remove default leaflet spacing */
+.leaflet-right .leaflet-control {
+  margin-right: 0;
+}
+
+.leaflet-top .leaflet-control,
+.leaflet-bottom .leaflet-control {
+  margin-bottom: 0;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+
+  .leaflet-top.leaflet-left {
+    gap: 6px;
+
+    margin: 8px;
+  }
+
+  .coordinate-control,
+  .leaflet-control-scale-line {
+    min-height: 30px;
+
+    padding: 0 var(--spacing-sm);
+
+    font-size: 10px;
+  }
+
+  .leaflet-control-zoom a {
+    width: 34px;
+
+    height: 34px;
+
+    line-height: 34px;
+
+    font-size: 16px;
+  }
+
+  
+
+}

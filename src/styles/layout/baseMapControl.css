@@ -1,0 +1,84 @@
+/* ========================================
+   BASEMAP CONTROL - HORIZONTAL LAYOUT
+======================================== */
+
+/* Basemap Control */
+.custom-basemap-control {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  padding: 6px;
+  background: var(--bg-control);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+}
+
+.custom-basemap-control:hover {
+  border-color: var(--border-color-light);
+}
+
+/* Basemap Button */
+.basemap-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.basemap-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-color-light);
+  transform: translateY(-1px);
+}
+
+.basemap-btn.active {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+.basemap-btn.active::before {
+  content: '✓';
+  margin-right: 5px;
+  font-size: 9px;
+}
+
+.basemap-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 102, 179, 0.3);
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+  .custom-basemap-control {
+    min-width: 110px;
+    padding: var(--spacing-sm);
+    gap: 6px;
+  }
+
+  .basemap-btn {
+    min-height: 32px;
+    font-size: 11px;
+    padding: 0 10px;
+  }
+}

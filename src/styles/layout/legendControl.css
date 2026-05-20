@@ -1,0 +1,326 @@
+/* ========================================
+   RIGHT SIDE STACK
+======================================== */
+.leaflet-bottom.leaflet-right {
+  display: flex;
+  flex-direction: column-reverse; /* Layers top, Legend below */
+  align-items: flex-end;
+
+  gap: 12px;
+
+  right: var(--spacing-md);
+  bottom: var(--spacing-md);
+}
+
+.leaflet-right .leaflet-control {
+  margin-right: 0;
+}
+
+.leaflet-bottom .leaflet-control {
+  margin-bottom: 0;
+}
+/* Hide default Leaflet attribution */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* ========================================
+   SHARED PANEL SHELL
+   (Legend + Layer Panel)
+======================================== */
+.hazard-legend,
+.hazard-layer-control {
+  min-width: 170px;
+  padding: 14px;
+
+  background: var(--bg-control);
+  color: var(--text-primary);
+
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow: var(--shadow-lg);
+
+  transition: all var(--transition-fast);
+}
+
+.hazard-legend:hover,
+.hazard-layer-control:hover {
+  border-color: var(--border-color-light);
+}
+
+/* ========================================
+   SHARED TITLE
+======================================== */
+.legend-title,
+.layer-title {
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+
+  border-bottom: 1px solid var(--border-color);
+
+  color: var(--text-primary);
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ========================================
+   LEGEND ROW
+======================================== */
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 8px;
+
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.legend-row:last-child {
+  margin-bottom: 0;
+}
+
+.legend-row:hover {
+  transform: translateX(2px);
+}
+
+/* Color Swatch */
+.legend-color {
+  width: 28px;
+  height: 12px;
+
+  border-radius: 4px;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  transition: all var(--transition-fast);
+}
+
+.legend-row:hover .legend-color {
+  transform: scaleX(1.05);
+}
+
+/* Legend Label */
+.legend-label {
+  color: var(--text-secondary);
+
+  font-family: "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ========================================
+   LAYER PANEL ROWS
+======================================== */
+.layer-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 8px;
+
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.layer-toggle-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.layer-toggle-row:hover {
+  transform: translateX(2px);
+}
+
+/* ========================================
+   CUSTOM CHECKBOX
+======================================== */
+.layer-toggle-row input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 14px;
+  height: 14px;
+
+  margin: 0;
+  flex-shrink: 0;
+
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  cursor: pointer;
+  position: relative;
+
+  transition: all var(--transition-fast);
+}
+
+/* Checked */
+.layer-toggle-row input[type="checkbox"]:checked {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
+}
+
+/* Tick */
+.layer-toggle-row
+  input[type="checkbox"]:checked::after {
+  content: "";
+
+  position: absolute;
+  left: 4px;
+  top: 1px;
+
+  width: 3px;
+  height: 7px;
+
+  border: solid white;
+  border-width: 0 2px 2px 0;
+
+  transform: rotate(45deg);
+}
+
+/* Disabled */
+.layer-toggle-row
+  input[type="checkbox"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.layer-toggle-row:has(
+    input:disabled
+  ) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Layer Label */
+.layer-label {
+  color: var(--text-secondary);
+
+  font-family: "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ========================================
+   PGA OPACITY SECTION
+======================================== */
+.layer-opacity-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  margin-top: 12px;
+  padding-top: 10px;
+
+  border-top: 1px solid var(--border-color);
+}
+
+.layer-opacity-label {
+  color: var(--text-secondary);
+
+  font-family: "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Slider Track */
+.layer-opacity-section
+  input[type="range"] {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+
+  height: 4px;
+  border-radius: 999px;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.14
+  );
+
+  cursor: pointer;
+}
+
+/* Slider Thumb */
+.layer-opacity-section
+  input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  background: var(--primary-light);
+  border: 2px solid var(--bg-control);
+
+  cursor: pointer;
+}
+
+/* Disabled Slider */
+.layer-opacity-section
+  input:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 768px) {
+  .hazard-legend,
+  .hazard-layer-control {
+    min-width: 150px;
+    padding: 10px;
+  }
+
+  .legend-title,
+  .layer-title {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+
+  .legend-label,
+  .layer-label,
+  .layer-opacity-label {
+    font-size: 10px;
+  }
+
+  .legend-color {
+    width: 24px;
+    height: 10px;
+  }
+
+  .layer-toggle-row {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leaflet-bottom.leaflet-right {
+    right: var(--spacing-sm);
+    bottom: var(--spacing-sm);
+    gap: 10px;
+  }
+
+  .hazard-legend,
+  .hazard-layer-control {
+    min-width: 140px;
+    padding: 10px;
+  }
+}
