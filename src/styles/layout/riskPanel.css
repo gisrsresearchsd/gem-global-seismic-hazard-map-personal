@@ -320,7 +320,7 @@
   padding: 0 24px;
   border: none;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
   color: white;
   font-size: 14px;
   font-weight: 700;

@@ -18,7 +18,11 @@ Thumbs.db
 
 # IDE
 .vscode
+<<<<<<< HEAD
 .idea
 
 # Archives
 *.zip
+=======
+.idea
+>>>>>>> 3fa030c7a09321b20f3d6b4388d4b93ed89578ad
