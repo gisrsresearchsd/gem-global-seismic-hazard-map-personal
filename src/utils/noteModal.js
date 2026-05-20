@@ -78,7 +78,9 @@ async function openNoteModalFunction(noteNumber) {
   modal.style.display = 'block';
 
   try {
-  const noteFileName = noteNumber.toLowerCase().replace(' ', '');
+  const noteFileName = noteNumber
+  .toLowerCase()
+  .replace(/\s+/g, '');
 
   const notePath =
     `${import.meta.env.BASE_URL}notes/${noteFileName}.html`;
