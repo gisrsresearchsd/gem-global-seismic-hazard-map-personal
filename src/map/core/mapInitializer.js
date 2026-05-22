@@ -43,7 +43,7 @@ export async function initializeMap() {
 
   /* Layers */
   const faultLayer = await loadFaultLayer(map);
-  faultLayer.addTo(map);
+
 
   const countryLayer = await loadCountryLayer(map);
   countryLayer.addTo(map);
