@@ -10,8 +10,6 @@
     <div class="app-container">
       <header class="app-header">
         <div class="header-left">
-          
-
           <div class="header-title-wrapper">
             <h1>Global Seismic Hazard Map</h1>
             <span class="header-subtitle">Version: v2023.1</span>
@@ -247,9 +245,7 @@
                 <div class="map-attribution-item">
                   <div class="map-attr-title">Country Boundaries</div>
 
-                  <div class="map-attr-description">
-                    GeoJSON administrative country boundaries.
-                  </div>
+                  <div class="map-attr-description">Country boundaries.</div>
 
                   <a
                     href="https://github.com/datasets/geo-countries"
@@ -260,13 +256,47 @@
                   </a>
                 </div>
 
+                <!-- Basemap Tiles - CORRECTED for your sources -->
                 <div class="map-attribution-item">
-                  <div class="map-attr-title">Maps & Geocoding</div>
-
+                  <div class="map-attr-title">Basemap Tiles</div>
                   <div class="map-attr-description">
-                    OpenStreetMap, CartoDB, Esri basemaps and Nominatim
-                    geocoding services.
+                    <strong>OpenStreetMap</strong> – Standard tiles<br />
+                    <strong>CartoDB</strong> – Light &amp; Dark basemaps<br />
+                    <strong>Esri</strong> – Satellite imagery<br />
+                    <strong>OpenTopoMap</strong> – Topographic maps
                   </div>
+                  <div
+                    class="map-attr-description"
+                    style="
+                      font-size: 10px;
+                      color: var(--text-muted);
+                      margin-top: 6px;
+                    "
+                  >
+                    © OpenStreetMap contributors · © CartoDB · © Esri, Maxar,
+                    Earthstar · © OpenTopoMap
+                  </div>
+                </div>
+
+                <!-- Geocoding Service -->
+                <div class="map-attribution-item">
+                  <div class="map-attr-title">Geocoding Service</div>
+                  <div class="map-attr-description">
+                    Location search powered by Nominatim
+                  </div>
+                  <div
+                    class="map-attr-description"
+                    style="font-size: 10px; color: var(--text-muted)"
+                  >
+                    © OpenStreetMap contributors
+                  </div>
+                  <a
+                    href="https://operations.osmfoundation.org/policies/nominatim/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Nominatim Usage Policy
+                  </a>
                 </div>
 
                 <div class="map-attribution-note">

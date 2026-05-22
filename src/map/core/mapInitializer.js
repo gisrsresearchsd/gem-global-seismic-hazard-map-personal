@@ -42,13 +42,19 @@ export async function initializeMap() {
   BASE_MAPS[APP_CONFIG.MAP.DEFAULT_BASEMAP].addTo(map);
 
   /* Layers */
+  const faultLayer = await loadFaultLayer(map);
+  faultLayer.addTo(map);
+
+  const countryLayer = await loadCountryLayer(map);
+  countryLayer.addTo(map);
+
   pgaVisualizationLayer.addTo(map);
 
   loadHiddenRaster();
 
-  const faultLayer = await loadFaultLayer(map);
 
-  const countryLayer = await loadCountryLayer(map);
+
+  
 
   /* Controls */
   createZoomControl(map);
