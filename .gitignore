@@ -1,8 +1,8 @@
 # Dependencies
-node_modules
+node_modules/
 
 # Build
-dist
+dist/
 
 # Logs
 npm-debug.log*
@@ -17,12 +17,8 @@ yarn-error.log*
 Thumbs.db
 
 # IDE
-.vscode
-<<<<<<< HEAD
-.idea
+.vscode/
+.idea/
 
 # Archives
 *.zip
-=======
-.idea
->>>>>>> 3fa030c7a09321b20f3d6b4388d4b93ed89578ad
