@@ -8,8 +8,7 @@ import {
 
 import { PROPERTY_TYPES } from "../analysis/riskConstants";
 
-// Generate Risk Report
-
+/* Generate risk report */
 export function generateRiskReport({
   pga,
   seismicity,
@@ -42,7 +41,6 @@ export function generateRiskReport({
 
   return `
     <div class="report-card">
-
       ${generateRecommendationSection({
         recommendation,
         recommendationClass,
@@ -53,29 +51,30 @@ export function generateRiskReport({
       </div>
 
       ${documentsSection}
-
     </div>
   `;
 }
 
-// Recommendation Section with Note Links
+/* Recommendation section */
 function generateRecommendationSection({
   recommendation,
   recommendationClass,
 }) {
-  // First escape the HTML to prevent XSS
   let recommendationHtml = escapeHtml(recommendation || "No Recommendation");
-  
-  // Replace "Note 1", "Note 2", etc. with clickable modal links
-  recommendationHtml = recommendationHtml.replace(
-    /(Note \d)/g,
-    function(match) {
-      const noteNumber = match;
-      // Use window.openNoteModal (now available globally)
-      return `<a href="#" onclick="window.openNoteModal('${noteNumber}'); return false;" class="note-link" style="color: #4ade80; text-decoration: underline; cursor: pointer; font-weight: 800; margin: 0 2px; display: inline-block;">${noteNumber}</a>`;
-    }
-  );
-  
+
+  // Convert "Note X" text to modal links
+  recommendationHtml = recommendationHtml.replace(/(Note \d)/g, (match) => {
+    return `
+          <a
+            href="#"
+            onclick="window.openNoteModal('${match}'); return false;"
+            class="note-link"
+          >
+            ${match}
+          </a>
+        `;
+  });
+
   return `
     <div class="report-top-row">
       <div class="report-badge ${escapeHtml(recommendationClass || "")}">
@@ -85,8 +84,7 @@ function generateRecommendationSection({
   `;
 }
 
-// Report Rows
-
+/* Report detail rows */
 function generateReportRows({
   pga,
   seismicity,
@@ -117,20 +115,14 @@ function generateReportRows({
     escapeHtml(seismicity || "Unknown"),
   );
 
-  rows += createReportRow(
-    "Nearest Seismic Source",
-    escapeHtml(faultLabel || "Unknown"),
-  );
+  rows += createReportRow("Nearest Seismic Source", escapeHtml(faultLabel));
 
   rows += createReportRow(
     "Property Type",
     escapeHtml(propertyType || "Unknown"),
   );
 
-  rows += createReportRow(
-    "Structural System",
-    escapeHtml(buildingLabel || "Unknown"),
-  );
+  rows += createReportRow("Structural System", escapeHtml(buildingLabel));
 
   rows += createReportRow("Building Height", buildingHeight);
 
@@ -144,56 +136,46 @@ function generateReportRows({
   return rows;
 }
 
-// Documents Section
-
+/* Documents section */
 function generateDocumentsSection(selectedDocuments = []) {
   const hasDocuments =
     Array.isArray(selectedDocuments) && selectedDocuments.length > 0;
 
-  if (!hasDocuments) {
-    return `
-      <div class="report-documents">
-
-        <div class="
-          report-doc-title
-        ">
-          Selected Documentation
-        </div>
-
-        <div class="
-          no-documents-message
-        ">
+  const documentContent = hasDocuments
+    ? generateDocumentList(selectedDocuments)
+    : `
+        <div class="no-documents-message">
           No documentation selected
         </div>
+      `;
 
+  return `
+    <div class="report-documents">
+      <div class="report-doc-title">
+        Selected Documentation
       </div>
-    `;
-  }
 
+      ${documentContent}
+    </div>
+  `;
+}
+
+/* Document list */
+function generateDocumentList(selectedDocuments) {
   const documentItems = selectedDocuments
     .filter(Boolean)
     .map(
       (doc) => `
-        <li>
-          ${escapeHtml(doc)}
-        </li>
-      `,
+          <li>
+            ${escapeHtml(doc)}
+          </li>
+        `,
     )
     .join("");
 
   return `
-    <div class="report-documents">
-
-      <div class="
-        report-doc-title
-      ">
-        Selected Documentation
-      </div>
-
-      <ul>
-        ${documentItems}
-      </ul>
-
-    </div>
+    <ul>
+      ${documentItems}
+    </ul>
   `;
 }

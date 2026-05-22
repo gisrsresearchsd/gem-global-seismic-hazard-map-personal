@@ -1,32 +1,31 @@
-/* ========================================
-   RISK PANEL - COMPLETE PROFESSIONAL VERSION
-======================================== */
+/* 
+   RISK ANALYSIS PANEL
+   Enhanced form, cards, and report styling
+ */
 
-/* ========================================
-   PANEL LAYOUT
-======================================== */
-
+/*  PANEL LAYOUT  */
 .risk-panel-wrapper {
   display: flex;
-  flex-direction: column;
   flex: 1;
+  flex-direction: column;
   min-height: 0;
   overflow: hidden;
   padding: 20px;
 }
 
+/* Panel title */
 .panel-title {
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-md);
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.3px;
-  color: var(--text-primary);
   background: linear-gradient(135deg, #fff, var(--text-secondary));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
+/* Form scroll area */
 .risk-form-section {
   flex: 1;
   min-height: 0;
@@ -34,37 +33,49 @@
   overflow-x: hidden;
   padding: 18px;
   padding-right: 10px;
-  scrollbar-width: thin;
-  background: linear-gradient(145deg, rgba(30, 42, 58, 0.72), rgba(20, 30, 45, 0.88));
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(34, 46, 64, 0.82), rgba(20, 30, 45, 0.94));
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+  scrollbar-width: thin;
   scrollbar-gutter: stable;
 }
 
+.risk-form-section:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Form scrollbar */
 .risk-form-section::-webkit-scrollbar {
   width: 4px;
 }
 
 .risk-form-section::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
 }
 
 .risk-form-section::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
+.risk-form-section::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Panel content */
 .risk-panel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
-/* ========================================
-   RISK INFO CARDS
-======================================== */
-
+/*  RISK INFO CARDS  */
 .risk-info-group {
   display: grid;
   grid-template-columns: 1fr;
@@ -76,30 +87,32 @@
   flex-direction: column;
   gap: 6px;
   padding: 14px;
-  background: rgba(30, 42, 58, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(26, 35, 46, 0.6);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  transition: all var(--transition-fast);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .risk-info-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(30, 42, 58, 0.85);
+  transform: translateY(-3px) scale(1.01);
+  background: rgba(26, 35, 46, 0.8);
+  border-color: rgba(0, 102, 179, 0.5);
+  box-shadow: var(--shadow-md);
 }
 
 .risk-info-label {
-  font-size: 10px;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 10px;
   font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .risk-info-value {
+  color: var(--text-primary);
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-primary);
   letter-spacing: -0.2px;
 }
 
@@ -112,53 +125,51 @@
 }
 
 .risk-info-value.danger {
-  color: var(--danger-color);
+  color: var(--danger);
   font-size: 12px;
   font-weight: 600;
 }
 
-/* Risk Badge */
+/* Risk badges */
 .risk-badge {
   width: fit-content;
   padding: 3px 8px;
+  border: 1px solid var(--border);
   border-radius: 100px;
+  background: var(--neutral-bg);
+  color: var(--neutral);
   font-size: 9px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
-  background: rgba(148, 163, 184, 0.2);
-  color: var(--neutral-color);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-transform: uppercase;
+  transition: all var(--transition-fast);
 }
 
 .risk-badge.low {
-  background: rgba(34, 197, 94, 0.2);
-  color: var(--success-color);
+  background: var(--success-bg);
+  color: var(--success);
   border-color: rgba(34, 197, 94, 0.3);
 }
 
 .risk-badge.moderate {
-  background: rgba(245, 158, 11, 0.2);
-  color: var(--warning-color);
+  background: var(--warning-bg);
+  color: var(--warning);
   border-color: rgba(245, 158, 11, 0.3);
 }
 
 .risk-badge.high {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--danger-color);
+  background: var(--danger-bg);
+  color: var(--danger);
   border-color: rgba(239, 68, 68, 0.3);
 }
 
 .risk-badge.negligible {
-  background: rgba(148, 163, 184, 0.2);
-  color: var(--neutral-color);
+  background: var(--neutral-bg);
+  color: var(--neutral);
   border-color: rgba(148, 163, 184, 0.3);
 }
 
-/* ========================================
-   FORM ELEMENTS
-======================================== */
-
+/*  FORM ELEMENTS  */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -170,96 +181,103 @@
 }
 
 .form-group label {
+  color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-secondary);
   letter-spacing: 0.3px;
 }
 
+/* Input and select styling */
 .form-group select,
-.form-group input:not([type="checkbox"]) {
+.form-group input:not([type='checkbox']) {
   height: 44px;
   padding: 0 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-md);
-  background: rgba(0, 0, 0, 0.25);
-  color: var(--text-primary);
-  outline: none;
-  transition: all var(--transition-fast);
-  font-size: 13px;
-  font-weight: 500;
   appearance: none;
   -webkit-appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
 .form-group select:hover,
-.form-group input:hover:not([type="checkbox"]) {
-  background: rgba(0, 0, 0, 0.35);
+.form-group input:hover:not([type='checkbox']) {
+  background: rgba(0, 0, 0, 0.5);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Custom select arrow */
 .form-group select {
+  padding-right: 44px;
   cursor: pointer;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23e2e8f0'%3e%3cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd' /%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 16px;
-  padding-right: 44px;
 }
 
 .form-group select option {
-  background: #1a2332;
-  color: var(--text-primary);
   padding: 12px;
+  background: var(--bg-panel);
+  color: var(--text-primary);
 }
 
+/* Focus states */
 .form-group select:focus,
-.form-group input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(0, 102, 179, 0.2);
+.form-group input:focus:not([type='checkbox']) {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2), var(--shadow-glow-primary);
+  background: rgba(0, 0, 0, 0.6);
 }
 
+/* Field validation error */
 .field-error {
-  border-color: #ef4444 !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px var(--danger-bg) !important;
 }
 
-/* ========================================
-   DOCUMENT TOGGLE & LIST
-======================================== */
-
+/*  DOCUMENT TOGGLE & LIST  */
 .document-toggle-btn {
-  height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 44px;
   padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-md);
-  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg); /* CHANGED: from md to lg */
+  background: rgba(0, 0, 0, 0.4);
   color: var(--text-primary);
-  cursor: pointer;
-  transition: all var(--transition-fast);
   font-size: 13px;
   font-weight: 500;
+  transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
 .document-toggle-btn:hover {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.5);
   border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.document-toggle-btn:active {
+  transform: translateY(0);
 }
 
 .document-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 12px;
-  padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
-  background: rgba(0, 0, 0, 0.2);
+  gap: 4px;
   max-height: 260px;
   overflow-y: auto;
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .document-list.collapsed {
@@ -269,26 +287,28 @@
 .document-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  user-select: none;
+  gap: 6px;
+  padding: 2px 0;
   color: var(--text-secondary);
   font-size: 13px;
-  padding: 6px 0;
+  line-height: 1.25;
+  cursor: pointer;
+  user-select: none;
   transition: color var(--transition-fast);
 }
 
 .document-item:hover {
   color: var(--text-primary);
+  transform: translateX(2px);
 }
 
-.document-item input[type="checkbox"] {
+.document-item input[type='checkbox'] {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  cursor: pointer;
-  accent-color: var(--primary-color);
+  accent-color: var(--primary);
   border-radius: var(--radius-xs);
+  cursor: pointer;
 }
 
 .document-item span {
@@ -296,72 +316,95 @@
   line-height: 1.4;
 }
 
-/* ========================================
-   ANALYZE BUTTON & VALIDATION
-======================================== */
-
+/*  ANALYZE BUTTON & VALIDATION  */
 .risk-action-section {
-  flex-shrink: 0;
-  padding: 14px 0 10px 0;
-  background: linear-gradient(to top, rgba(26, 35, 50, 0.98), rgba(30, 42, 58, 0.95));
-  backdrop-filter: blur(12px);
-  z-index: 5;
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+  flex-shrink: 0;
+  margin-top: 10px;
+  padding: 14px var(--spacing-md) 10px;
+  background: linear-gradient(to top, rgba(26, 35, 50, 0.98), rgba(30, 42, 58, 0.95));
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg); /* ADDED: Match the form section */
+  border: 1px solid rgba(255, 255, 255, 0.05); /* ADDED: Subtle border */
 }
 
 .analyze-btn {
-  height: 48px;
-  width: fit-content;
+  width: 100%;
   min-width: 170px;
+  height: 48px;
   padding: 0 24px;
   border: none;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-  color: white;
+  border-radius: var(--radius-lg); /* CHANGED: from md to lg (14px) */
+  background: linear-gradient(105deg, var(--primary) 0%, var(--accent-blue) 100%);
+  background-size: 200% auto;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 700;
-  cursor: pointer;
-  transition: all var(--transition-fast);
   letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .analyze-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-glow);
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-primary);
 }
 
 .analyze-btn:active {
   transform: translateY(0);
 }
 
+/* Button ripple effect */
+.analyze-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.analyze-btn:active::after {
+  width: 300px;
+  height: 300px;
+}
+
 .validation-message {
-  color: #f87171;
+  width: 100%;
+  min-height: 18px;
+  margin-top: 2px;
+  flex: none;
+  color: var(--danger);
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
-  width: 100%;
-  min-height: 18px;
-  flex: none;
-  margin-top: 2px;
 }
 
-/* ========================================
-   ANALYSIS REPORT STYLING
-======================================== */
-
+/*  ANALYSIS REPORT STYLING  */
 .risk-report-section {
   flex-shrink: 0;
-  margin-top: 16px;
+  margin-top: var(--spacing-md);
+  overflow: hidden;
+  border: 1px solid rgba(0, 102, 179, 0.2);
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg, rgba(30, 42, 58, 0.95), rgba(20, 30, 45, 0.98));
-  border: 1px solid rgba(0, 168, 232, 0.15);
-  overflow: hidden;
-  transition: all var(--transition-normal);
   box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.risk-report-section:hover {
+  border-color: rgba(0, 102, 179, 0.4);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 102, 179, 0.1);
 }
 
 .report-header {
@@ -369,34 +412,35 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px;
-  border-bottom: 1px solid rgba(0, 168, 232, 0.2);
+  background: linear-gradient(135deg, rgba(0, 102, 179, 0.12), rgba(0, 196, 184, 0.05));
+  border-bottom: 1px solid rgba(0, 102, 179, 0.2);
+  color: var(--text-primary);
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-primary);
-  background: linear-gradient(135deg, rgba(0, 168, 232, 0.15), rgba(0, 196, 184, 0.08));
   letter-spacing: 0.5px;
-  cursor: pointer;
   user-select: none;
+  transition: background var(--transition-fast);
+  cursor: pointer;
 }
 
 .report-header:hover {
-  background: linear-gradient(135deg, rgba(0, 168, 232, 0.25), rgba(0, 196, 184, 0.15));
+  background: linear-gradient(135deg, rgba(0, 102, 179, 0.2), rgba(0, 196, 184, 0.1));
 }
 
 .report-toggle-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
   transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
 .report-toggle-btn:hover {
@@ -411,12 +455,14 @@
   transition: max-height 0.3s ease, padding 0.3s ease;
 }
 
+/* Collapsed state */
 .risk-report-section.collapsed .report-content {
   max-height: 0;
-  padding: 0;
   overflow: hidden;
+  padding: 0;
 }
 
+/* Report card */
 .report-card {
   display: flex;
   flex-direction: column;
@@ -435,7 +481,7 @@
   }
 }
 
-/* Recommendation Badge */
+/* Report badges */
 .report-top-row {
   display: flex;
   justify-content: center;
@@ -449,15 +495,16 @@
   flex-wrap: wrap;
   gap: 6px;
   padding: 10px 20px;
-  border-radius: 60px;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: 0.3px;
-  text-align: center;
-  backdrop-filter: blur(4px);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(8px);
   box-shadow: var(--shadow-md);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-align: center;
   transition: all var(--transition-fast);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .report-badge:hover {
@@ -465,42 +512,42 @@
   box-shadow: var(--shadow-lg);
 }
 
-/* All results green - Unified styling */
 .report-badge.tier1,
 .report-badge.tier2,
 .report-badge.tier3,
 .report-badge.all-results-green {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(34, 197, 94, 0.15));
-  color: #4ade80;
-  border: 1.5px solid rgba(34, 197, 94, 0.5);
-  font-size: 13px;
+  border-left: 4px solid var(--success);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+  color: var(--success);
 }
 
-/* Note link styling */
+/* Note link */
 .note-link {
-  color: #4ade80;
-  text-decoration: underline;
-  cursor: pointer;
-  font-weight: 800;
   display: inline-block;
   margin: 0 2px;
+  color: var(--success);
   font-size: 12px;
+  font-weight: 800;
+  text-decoration: underline;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  cursor: pointer;
 }
 
 .note-link:hover {
-  color: #22c55e;
+  color: var(--success);
   text-decoration: none;
   transform: scale(1.02);
 }
 
-/* Report Body */
+/* Report body */
 .report-body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: var(--radius-md);
   padding: 16px;
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .report-row {
@@ -509,91 +556,91 @@
   justify-content: space-between;
   gap: 20px;
   padding: 6px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .report-row:last-child {
-  border-bottom: none;
   padding-bottom: 0;
+  border-bottom: none;
 }
 
 .report-label {
   min-width: 110px;
   color: var(--text-muted);
+  opacity: 0.8;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  opacity: 0.8;
 }
 
 .report-value {
   flex: 1;
   color: var(--text-primary);
+  font-family: var(--font-family-mono);
   font-size: 13px;
   font-weight: 500;
-  text-align: right;
   line-height: 1.3;
+  text-align: right;
   word-break: break-word;
-  font-family: "SF Mono", "Fira Code", monospace;
 }
 
 .report-row:first-child .report-value {
+  color: var(--accent-blue);
   font-size: 14px;
   font-weight: 700;
-  color: var(--accent-blue);
 }
 
-/* Documents Section */
+/* Documents section */
 .report-documents {
   margin-top: 8px;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.2);
+  border-left: 3px solid var(--primary);
   border-radius: var(--radius-md);
-  border-left: 3px solid var(--primary-color);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .report-doc-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 12px;
   color: var(--text-secondary);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .report-doc-title::before {
-  content: "📋";
+  content: '📋';
   font-size: 12px;
   opacity: 0.7;
 }
 
 .report-documents ul {
-  margin: 0;
-  padding-left: 0;
-  list-style-type: none;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
 }
 
 .report-documents li {
+  position: relative;
+  padding-left: 18px;
   color: var(--text-secondary);
   font-size: 12px;
   line-height: 1.4;
-  position: relative;
-  padding-left: 18px;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
 .report-documents li::before {
-  content: "▹";
+  content: '▹';
   position: absolute;
   left: 0;
-  color: var(--primary-color);
+  color: var(--primary);
   font-size: 11px;
 }
 
@@ -604,45 +651,45 @@
 
 .no-documents-message {
   padding: 12px 16px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.15);
   color: var(--text-muted);
   font-size: 12px;
   font-style: normal;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: var(--radius-sm);
-  border: 1px dashed rgba(255, 255, 255, 0.1);
   letter-spacing: 0.3px;
+  text-align: center;
 }
 
-/* Empty State */
+/* Empty state */
 #riskResult:empty::before {
-  content: "Click on map or search location to start analysis";
+  content: 'Click on map or search location to start analysis';
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 120px;
   color: var(--text-muted);
-  text-align: center;
   font-size: 12px;
   font-style: normal;
   letter-spacing: 0.3px;
+  text-align: center;
 }
 
-/* Report Scroll Indicator */
+/* Scroll indicator */
 .report-scroll-indicator {
   display: flex;
   justify-content: center;
-  padding: 8px;
+  gap: 8px;
   margin-bottom: 12px;
+  padding: 8px;
+  border-bottom: 1px dashed rgba(var(--primary-rgb), 0.2);
   color: var(--text-muted);
   font-size: 11px;
-  gap: 8px;
-  border-bottom: 1px dashed rgba(0, 168, 232, 0.2);
   animation: fadeInOut 2s ease-in-out;
 }
 
 .report-scroll-indicator::before {
-  content: "↓";
+  content: '↓';
   animation: bounce 1s ease infinite;
 }
 
@@ -659,100 +706,170 @@
   0% {
     opacity: 0;
   }
-  20% {
-    opacity: 1;
-  }
-  80% {
+  20%, 80% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    display: none;
   }
 }
 
-/* Scrollbar for Report */
+/* Report scrollbar */
 .report-content::-webkit-scrollbar {
   width: 5px;
 }
 
 .report-content::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .report-content::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-teal));
-  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--accent-teal));
+  border-radius: var(--radius-md);
 }
 
 .report-content::-webkit-scrollbar-thumb:hover {
   background: var(--primary-light);
 }
 
-
-/* ========================================
-   RESPONSIVE
-======================================== */
-
+/*  RESPONSIVE DESIGN  */
+/* Mobile */
 @media (max-width: 768px) {
   .risk-panel-wrapper {
-    padding: 16px;
+    padding: var(--spacing-md);
   }
-
-  .report-content {
+  
+  .panel-title {
+    font-size: 18px;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .risk-form-section {
     padding: 14px;
-    max-height: 350px;
   }
-
+  
+  .report-header {
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+  
+  .report-toggle-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+  
+  .report-content {
+    max-height: 350px;
+    padding: 14px;
+  }
+  
   .report-badge {
     padding: 8px 14px;
     font-size: 11px;
   }
-
-  .report-badge.tier1,
-  .report-badge.tier2,
-  .report-badge.tier3,
-  .report-badge.all-results-green {
-    font-size: 11px;
-  }
-
+  
   .note-link {
     font-size: 10px;
   }
-
+  
+  .report-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
   .report-label {
-    min-width: 90px;
+    min-width: unset;
     font-size: 10px;
   }
-
+  
   .report-value {
+    width: 100%;
     font-size: 11px;
+    text-align: left;
   }
-
+  
+  .report-documents {
+    padding: 14px;
+  }
+  
   .report-documents li {
     font-size: 11px;
+    padding-left: 16px;
   }
-
+  
+  .risk-info-group {
+    gap: 10px;
+  }
+  
+  .risk-info-card {
+    padding: 12px;
+  }
+  
+  .risk-info-label {
+    font-size: 9px;
+  }
+  
   .risk-info-value {
     font-size: 16px;
   }
-
+  
   .risk-info-card:last-child .risk-info-value {
     font-size: 11px;
   }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .report-badge {
+  
+  .form-group select,
+  .form-group input:not([type='checkbox']) {
+    height: 40px;
     font-size: 12px;
-    padding: 9px 16px;
   }
   
-  .report-badge.tier1,
-  .report-badge.tier2,
-  .report-badge.tier3,
-  .report-badge.all-results-green {
+  .analyze-btn {
+    height: 44px;
+    font-size: 13px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .report-badge {
+    padding: 9px 16px;
     font-size: 12px;
+  }
+  
+  .report-row {
+    gap: 14px;
+  }
+  
+  .report-label {
+    min-width: 100px;
+  }
+  
+  .report-value {
+    font-size: 12px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .risk-info-card,
+  .analyze-btn,
+  .report-badge,
+  .document-item {
+    transition: none;
+  }
+  
+  .risk-info-card:hover {
+    transform: none;
+  }
+  
+  .analyze-btn:hover {
+    transform: none;
+  }
+  
+  .report-card {
+    animation: none;
   }
 }

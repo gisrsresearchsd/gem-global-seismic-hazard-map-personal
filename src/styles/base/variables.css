@@ -1,42 +1,46 @@
 /* ========================================
-   DESIGN SYSTEM TOKENS
-   Core variables for the entire application
-   All other CSS files inherit from this
+   Design Tokens
+   Shared variables used across the app
+   [ENHANCED: Refined shadows, added missing vars, better easing]
 ======================================== */
 
 :root {
-  /* ===== Brand Colors ===== */
+  /* ===== BRAND COLORS ===== */
   --primary: #0066b3;
   --primary-light: #2d7fc1;
   --primary-dark: #004d8c;
   --primary-rgb: 0, 102, 179;
 
-  /* ===== Accent Colors ===== */
+  /* ===== ACCENT COLORS ===== */
   --accent-blue: #00a8e8;
   --accent-teal: #00c4b8;
+  --accent-gold: #f5a623;
+  --accent-gold-rgb: 245, 166, 35;
+  --accent-purple: #8b5cf6;
+  --accent-purple-rgb: 139, 92, 246;
 
-  /* ===== Backgrounds ===== */
-  --bg-app: #0f1419;
-  --bg-panel: #1a2332;
-  --bg-panel-lighter: #1e2a3a;
-  --bg-control: rgba(26, 35, 50, 0.92);
-  --bg-card: rgba(30, 42, 58, 0.85);
-  --bg-card-solid: #1e2a3a;
+  /* ===== BACKGROUNDS ===== */
+  --bg-app: radial-gradient(circle at 10% 20%, #141b24, #0a0f14);
+  --bg-map: #0a0f14; /* ADDED: Missing map background */
+  --bg-panel: rgba(20, 28, 36, 0.92);
+  --bg-surface: #1a232e;
+  --bg-control: rgba(12, 18, 24, 0.85);
+  --bg-card: rgba(26, 35, 46, 0.7);
   --bg-hover: rgba(255, 255, 255, 0.08);
   --bg-active: rgba(255, 255, 255, 0.12);
 
-  /* ===== Text Colors ===== */
+  /* ===== TEXT COLORS ===== */
   --text-primary: #ffffff;
   --text-secondary: #e2e8f0;
   --text-muted: #a0aec0;
   --text-disabled: #718096;
 
-  /* ===== Border Colors ===== */
+  /* ===== BORDER COLORS ===== */
   --border: rgba(255, 255, 255, 0.1);
   --border-light: rgba(255, 255, 255, 0.15);
   --border-focus: rgba(0, 102, 179, 0.5);
 
-  /* ===== Status Colors ===== */
+  /* ===== STATUS COLORS ===== */
   --success: #22c55e;
   --success-bg: rgba(34, 197, 94, 0.15);
   --warning: #f59e0b;
@@ -48,7 +52,7 @@
   --neutral: #94a3b8;
   --neutral-bg: rgba(148, 163, 184, 0.15);
 
-  /* ===== Border Radius ===== */
+  /* ===== BORDER RADIUS ===== */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -56,20 +60,40 @@
   --radius-xl: 18px;
   --radius-2xl: 24px;
 
-  /* ===== Shadows ===== */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.18);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.35);
-  --shadow-glow: 0 0 20px rgba(0, 102, 179, 0.3);
+  /* ===== SPACING ===== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
 
-  /* ===== Transitions ===== */
+  /* ===== SHADOWS ===== */
+  /* IMPROVED: Softer, more realistic shadows with higher Y-offset for depth */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 4px 6px -2px rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 15px -4px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 25px -6px rgba(0, 0, 0, 0.5), 0 4px 8px -4px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 25px 40px -12px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px rgba(0, 102, 179, 0.3);
+  --shadow-glow-primary: 0 0 15px rgba(0, 102, 179, 0.4);
+  --shadow-glow-success: 0 0 12px rgba(34, 197, 94, 0.3);
+
+  /* ===== TRANSITIONS ===== */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
   --transition-slow: 0.35s ease;
+  --transition-bounce: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ADDED: Premium custom easing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* ===== Z-Index Stack ===== */
+  /* ===== GLASS EFFECT ===== */
+  /* IMPROVED: More transparent background for better blur visibility */
+  --glass-bg: rgba(10, 18, 27, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-backdrop: blur(16px);
+
+  /* ===== Z-INDEX LAYERS ===== */
   --z-base: 1;
   --z-map-controls: 400;
   --z-sidebar: 1000;
@@ -78,37 +102,38 @@
   --z-modal: 1300;
   --z-tooltip: 1400;
 
-  /* ===== Spacing ===== */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-2xl: 48px;
-
-  /* ===== Glass/Overlay Effects ===== */
-  --glass-bg: rgba(17, 24, 39, 0.92);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --glass-backdrop: blur(12px);
-
-  /* ===== Breakpoints ===== */
-  --breakpoint-md: 1024px;
-  --breakpoint-sm: 768px;
+  /* ===== BREAKPOINTS ===== */
   --breakpoint-xs: 480px;
+  --breakpoint-sm: 768px;
+  --breakpoint-md: 1024px;
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-family-mono: "SF Mono", "Fira Code", "JetBrains Mono", monospace;
+
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+
+  --line-height-sm: 1.4;
+  --line-height-md: 1.6;
+  --line-height-lg: 1.8;
 }
 
-/* ========================================
-   RESPONSIVE ADJUSTMENTS
-   Scale down spacing and radius on smaller screens
-======================================== */
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
 
+/* Tablet */
 @media (max-width: 1024px) {
   :root {
     --radius-lg: 12px;
     --spacing-lg: 20px;
+    --font-size-md: 15px;
   }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
   :root {
     --radius-md: 8px;
@@ -116,5 +141,17 @@
     --spacing-md: 12px;
     --spacing-lg: 16px;
     --spacing-xl: 24px;
+    --font-size-sm: 13px;
+    --font-size-md: 14px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  :root {
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --spacing-sm: 6px;
+    --spacing-md: 10px;
   }
 }

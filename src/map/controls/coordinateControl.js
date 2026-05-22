@@ -1,76 +1,55 @@
-// Convert Decimal Degree to DMS
+const DEFAULT_MESSAGE = "Move cursor over map";
 
+/* Convert decimal degree to DMS */
 function convertToDMS(value, type) {
-
   const absoluteValue = Math.abs(value);
 
-  const degrees = Math.floor(absoluteValue);
+  let degrees = Math.floor(absoluteValue);
 
-  const minutesFloat =
-    (absoluteValue - degrees) * 60;
+  let minutesFloat = (absoluteValue - degrees) * 60;
 
-  const minutes = Math.floor(minutesFloat);
+  let minutes = Math.floor(minutesFloat);
 
-  const secondsFloat =
-    (minutesFloat - minutes) * 60;
+  let seconds = Math.round((minutesFloat - minutes) * 60);
 
-  const seconds =
-    Math.round(secondsFloat);
-
-  let direction = '';
-
-  // Latitude Direction
-
-  if (type === 'lat') {
-    direction =
-      value >= 0 ? 'N' : 'S';
+  /* Normalize overflow */
+  if (seconds === 60) {
+    seconds = 0;
+    minutes += 1;
   }
 
-  // Longitude Direction
-
-  if (type === 'lng') {
-    direction =
-      value >= 0 ? 'E' : 'W';
+  if (minutes === 60) {
+    minutes = 0;
+    degrees += 1;
   }
 
-  return `
-    ${degrees}° ${minutes}' ${seconds}" ${direction}
-  `;
+  const direction =
+    type === "lat" ? (value >= 0 ? "N" : "S") : value >= 0 ? "E" : "W";
+
+  return `${degrees}° ${minutes}' ${seconds}" ${direction}`;
 }
 
-// Create Coordinate Display
-
+/* Create coordinate display */
 export function createCoordinateControl(map) {
+  const coordinateDiv = document.querySelector(".coordinate-control");
 
-  const coordinateDiv =
-    document.querySelector('.coordinate-control');
+  if (!coordinateDiv) {
+    return;
+  }
 
-  // Default Message
+  coordinateDiv.textContent = DEFAULT_MESSAGE;
 
-  coordinateDiv.innerHTML =
-    'Move cursor over map';
-
-  // Mouse Move
-
-  map.on('mousemove', (event) => {
-
+  map.on("mousemove", (event) => {
     const { lat, lng } = event.latlng;
 
-    const latDMS =
-      convertToDMS(lat, 'lat');
+    const latDMS = convertToDMS(lat, "lat");
 
-    const lngDMS =
-      convertToDMS(lng, 'lng');
+    const lngDMS = convertToDMS(lng, "lng");
 
-    coordinateDiv.innerHTML =
-      `${latDMS} | ${lngDMS}`;
+    coordinateDiv.textContent = `${latDMS} | ${lngDMS}`;
   });
 
-  // Mouse Leave Map
-
-  map.on('mouseout', () => {
-
-    coordinateDiv.innerHTML =
-      'Move cursor over map';
+  map.on("mouseout", () => {
+    coordinateDiv.textContent = DEFAULT_MESSAGE;
   });
 }

@@ -1,62 +1,127 @@
-import L from 'leaflet';
-import { BASE_MAPS } from './baseMaps';
+import L from "leaflet";
+import { BASE_MAPS } from "./baseMaps";
 
-// Singleton pattern to manage basemap state
+/* Singleton basemap manager */
 class BasemapManager {
   constructor() {
-    this.currentBaseLayer = BASE_MAPS.Light;
+    this.currentBaseLayer =
+      BASE_MAPS.Light;
+
     this.map = null;
-    this.activeOverlayLayers = [];
-    this.basemapContainer = null;
+    this.activeOverlayLayers =
+      [];
+    this.basemapContainer =
+      null;
   }
 
-  initialize(map, overlayLayers = []) {
+  initialize(
+    map,
+    overlayLayers = [],
+  ) {
     this.map = map;
-    this.activeOverlayLayers = overlayLayers;
-    this.currentBaseLayer.addTo(map);
+    this.activeOverlayLayers =
+      overlayLayers;
+
+    if (
+      !this.map.hasLayer(
+        this.currentBaseLayer,
+      )
+    ) {
+      this.currentBaseLayer.addTo(
+        map,
+      );
+    }
   }
 
-  setCurrentBasemap(baseMapName, updateButtons = true) {
-    if (!this.map) return;
-
-    // Remove current basemap
-    if (this.currentBaseLayer) {
-      this.map.removeLayer(this.currentBaseLayer);
+  setCurrentBasemap(
+    baseMapName,
+    updateButtons = true,
+  ) {
+    if (!this.map) {
+      return;
     }
 
-    // Set new basemap
-    this.currentBaseLayer = BASE_MAPS[baseMapName];
-    this.currentBaseLayer.addTo(this.map);
+    const nextBaseLayer =
+      BASE_MAPS[
+        baseMapName
+      ];
 
-    // Re-add overlays
-    this.activeOverlayLayers.forEach((layer) => {
-      if (!this.map.hasLayer(layer)) {
-        layer.addTo(this.map);
-      }
-      if (layer.bringToFront) {
-        layer.bringToFront();
-      }
-    });
+    if (!nextBaseLayer) {
+      return;
+    }
 
-    // Update button states if needed
-    if (updateButtons && this.basemapContainer) {
-      const buttons = this.basemapContainer.querySelectorAll('.basemap-btn');
-      buttons.forEach(btn => {
-        if (btn.innerHTML === baseMapName) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
+    if (
+      this.currentBaseLayer &&
+      this.map.hasLayer(
+        this.currentBaseLayer,
+      )
+    ) {
+      this.map.removeLayer(
+        this.currentBaseLayer,
+      );
+    }
+
+    this.currentBaseLayer =
+      nextBaseLayer;
+
+    this.currentBaseLayer.addTo(
+      this.map,
+    );
+
+    this.activeOverlayLayers.forEach(
+      (layer) => {
+        if (
+          !this.map.hasLayer(
+            layer,
+          )
+        ) {
+          layer.addTo(
+            this.map,
+          );
         }
-      });
+
+        if (
+          layer.bringToFront
+        ) {
+          layer.bringToFront();
+        }
+      },
+    );
+
+    if (
+      updateButtons &&
+      this.basemapContainer
+    ) {
+      const buttons =
+        this.basemapContainer.querySelectorAll(
+          ".basemap-btn",
+        );
+
+      buttons.forEach(
+        (btn) => {
+          btn.classList.toggle(
+            "active",
+            btn.dataset
+              .basemap ===
+              baseMapName,
+          );
+        },
+      );
     }
   }
 
   resetToDefault() {
-    this.setCurrentBasemap('Light', true);
+    this.setCurrentBasemap(
+      "Light",
+      true,
+    );
   }
 
-  setBasemapContainer(container) {
-    this.basemapContainer = container;
+  setBasemapContainer(
+    container,
+  ) {
+    this.basemapContainer =
+      container;
   }
 
   getCurrentBasemap() {
@@ -64,5 +129,6 @@ class BasemapManager {
   }
 }
 
-// Export singleton instance
-export const basemapManager = new BasemapManager();
+/* Export singleton */
+export const basemapManager =
+  new BasemapManager();

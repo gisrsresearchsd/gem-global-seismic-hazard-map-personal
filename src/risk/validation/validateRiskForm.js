@@ -1,43 +1,35 @@
-// Validate Risk Form
-
+/* Validate risk form */
 export function validateRiskForm(data = {}) {
-  const numericPga = Number(data.pga);
+  const { pga, propertyType, buildingType, stories } = data;
 
-  // PGA Validation
+  const numericPga = Number(pga);
+
+  const storyCount = Number(stories);
+
+  /* PGA validation */
   if (!Number.isFinite(numericPga)) {
-    return createValidationError(
-      "pga",
-      "Please select a valid seismic area.",
-    );
+    return createValidationError("pga", "Please select a valid seismic area.");
   }
 
-  // Property Type Validation
-  if (!data.propertyType) {
+  /* Property type validation */
+  if (!propertyType) {
     return createValidationError(
       "propertyType",
       "Please select property type.",
     );
   }
 
-  // Building Type Validation
-  if (!data.buildingType) {
+  /* Building type validation */
+  if (!buildingType) {
     return createValidationError(
       "buildingType",
       "Please select building type.",
     );
   }
 
-  // Stories Validation
-  const stories = Number(data.stories);
-
-  if (
-    !Number.isInteger(stories) ||
-    stories <= 0
-  ) {
-    return createValidationError(
-      "stories",
-      "Invalid number of stories.",
-    );
+  /* Stories validation */
+  if (!Number.isInteger(storyCount) || storyCount <= 0) {
+    return createValidationError("stories", "Invalid number of stories.");
   }
 
   return {
@@ -45,12 +37,8 @@ export function validateRiskForm(data = {}) {
   };
 }
 
-// Create Validation Error
-
-function createValidationError(
-  field,
-  message,
-) {
+/* Create validation error */
+function createValidationError(field, message) {
   return {
     valid: false,
     field,

@@ -1,40 +1,47 @@
-// Get Risk Panel Elements
-
+/* Get risk panel elements */
 export function getRiskPanelElements() {
   return {
-    // Form Fields
-
+    /* Form fields */
     propertyType: getElement("propertyType"),
+
     buildingTypeElement: getElement("buildingType"),
+
     storiesElement: getElement("buildingStories"),
+
     seismicAssessment: getElement("seismicAssessmentDone"),
 
-    // Sections
-
+    /* Sections */
     seismicQuestion: getElement("leaseRenewalQuestion"),
+
     documentsSection: getElement("documentsSection"),
-    reportSection: document.querySelector(".risk-report-section"),
 
-    // Buttons
+    reportSection: getQueryElement(".risk-report-section"),
 
+    /* Buttons */
     analyzeButton: getElement("analyzeBtn"),
+
     toggleButton: getElement("documentToggleBtn"),
-    reportToggleBtn: document.querySelector(".report-toggle-btn"),
 
-    // Document Controls
+    reportToggleBtn: getQueryElement(".report-toggle-btn"),
 
+    /* Document controls */
     documentList: getElement("documentList"),
+
     toggleIcon: getElement("documentToggleIcon"),
 
-    // Messages
-
+    /* Messages */
     validationMessage: getElement("validationMessage"),
+
     riskResult: getElement("riskResult"),
   };
 }
 
-// Get Element
-
+/* Get element by ID */
 function getElement(id) {
   return document.getElementById(id);
+}
+
+/* Get element by selector */
+function getQueryElement(selector) {
+  return document.querySelector(selector);
 }

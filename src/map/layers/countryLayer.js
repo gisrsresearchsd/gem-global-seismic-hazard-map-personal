@@ -1,8 +1,36 @@
 import L from "leaflet";
 
-export async function loadCountryLayer(
-  map
-) {
+/* Singleton */
+let countryLayer = null;
+
+/* Styles */
+const DEFAULT_COUNTRY_STYLE = {
+  color: "#64748b",
+  weight: 1,
+  fillOpacity: 0,
+};
+
+const HOVER_COUNTRY_STYLE = {
+  color: "#2563eb",
+  weight: 2,
+};
+
+/* Safe country name */
+function getCountryName(feature) {
+  return (
+    feature?.properties?.ADMIN ||
+    feature?.properties?.name ||
+    feature?.properties?.NAME ||
+    "Unknown Country"
+  );
+}
+
+/* Load country layer */
+export async function loadCountryLayer(map) {
+  if (countryLayer) {
+    return countryLayer;
+  }
+
   try {
     const url =
       "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson";
@@ -12,109 +40,82 @@ export async function loadCountryLayer(
 
     if (!response.ok) {
       throw new Error(
-        `HTTP ${response.status}`
+        `HTTP ${response.status}`,
       );
     }
 
     const text =
       await response.text();
 
+    const trimmedText =
+      text.trim().toLowerCase();
+
     if (
-      text
-        .trim()
-        .startsWith(
-          "<!doctype"
-        ) ||
-      text
-        .trim()
-        .startsWith(
-          "<html"
-        )
+      trimmedText.startsWith(
+        "<!doctype",
+      ) ||
+      trimmedText.startsWith(
+        "<html",
+      )
     ) {
       throw new Error(
-        "GeoJSON URL returned HTML instead of JSON"
+        "GeoJSON URL returned HTML instead of JSON",
       );
     }
 
     const geojson =
       JSON.parse(text);
 
-    const countryLayer =
+    countryLayer =
       L.geoJSON(
         geojson,
         {
-          style: {
-            color: "#64748b",
-            weight: 1,
-            fillOpacity: 0,
+          style:
+            DEFAULT_COUNTRY_STYLE,
+
+          onEachFeature(
+            feature,
+            layer,
+          ) {
+            layer.bindTooltip(
+              getCountryName(
+                feature,
+              ),
+              {
+                sticky: true,
+              },
+            );
+
+            layer.on(
+              "mouseover",
+              () => {
+                layer.setStyle(
+                  HOVER_COUNTRY_STYLE,
+                );
+              },
+            );
+
+            layer.on(
+              "mouseout",
+              () => {
+                countryLayer.resetStyle(
+                  layer,
+                );
+              },
+            );
           },
-
-          onEachFeature:
-            (
-              feature,
-              layer
-            ) => {
-              const countryName =
-                feature
-                  .properties
-                  ?.ADMIN ||
-                feature
-                  .properties
-                  ?.name ||
-                feature
-                  .properties
-                  ?.NAME ||
-                "Unknown Country";
-
-              // Hover label
-              layer.bindTooltip(
-                countryName,
-                {
-                  sticky:
-                    true,
-                }
-              );
-
-              // Hover highlight
-              layer.on(
-                "mouseover",
-                () => {
-                  layer.setStyle(
-                    {
-                      weight: 2,
-                      color:
-                        "#2563eb",
-                    }
-                  );
-                }
-              );
-
-              // Reset style
-              layer.on(
-                "mouseout",
-                () => {
-                  countryLayer.resetStyle(
-                    layer
-                  );
-                }
-              );
-            },
-        }
+        },
       );
 
-    countryLayer.addTo(
-      map
-    );
-
-    console.log(
-      "Country layer loaded"
-    );
+    countryLayer.addTo(map);
 
     return countryLayer;
   } catch (error) {
     console.error(
       "Country layer error:",
-      error
+      error,
     );
+
+    return null;
   }
 }

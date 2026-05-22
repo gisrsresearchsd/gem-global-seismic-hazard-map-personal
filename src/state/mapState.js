@@ -1,71 +1,54 @@
-// Global Map State
+import { APP_CONFIG } from "../config/appConfig";
 
+// Global map state
 export const mapState = {
-  // Selected Location
-
+  // Selected location
   location: {
     lat: null,
-
     lng: null,
   },
 
-  // Seismic Analysis
-
+  // Seismic analysis
   analysis: {
     pga: null,
-
     classification: null,
-
     nearestFault: null,
     country: null,
   },
 
   // Map UI
-
-  ui: {
-    selectedMarker: null,
-
-    activePopup: null,
-
-    faultConnectionLine: null,
-
+  ui: {    
     searchMarker: null,
   },
 
-  // Map Settings
-
+  // Map settings
   settings: {
-    activeBaseMap: "Light",
-
+    activeBaseMap: APP_CONFIG.MAP.DEFAULT_BASEMAP,
     lastSearch: "",
   },
 
-  // Loading State
-
+  // Loading state
   loading: {
     isAnalyzing: false,
   },
 };
 
-// Reset Analysis State
-
+// Reset analysis state
 export function resetAnalysisState() {
-  mapState.analysis.pga = null;
-
-  mapState.analysis.classification = null;
-
-  mapState.analysis.nearestFault = null;
-  mapState.analysis.country = null;
+  Object.assign(mapState.analysis, {
+    pga: null,
+    classification: null,
+    nearestFault: null,
+    country: null,
+  });
 }
 
-// Reset UI State
-
+// Reset UI state
 export function resetUIState() {
-  mapState.ui.selectedMarker = null;
-
-  mapState.ui.activePopup = null;
-
-  mapState.ui.faultConnectionLine = null;
-
-  mapState.ui.searchMarker = null;
+  Object.assign(mapState.ui, {
+    selectedMarker: null,
+    activePopup: null,
+    faultConnectionLine: null,
+    searchMarker: null,
+  });
 }

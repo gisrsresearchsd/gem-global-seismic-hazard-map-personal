@@ -5,10 +5,7 @@ export function validateRiskForm(data = {}) {
 
   // PGA Validation
   if (!Number.isFinite(numericPga)) {
-    return createValidationError(
-      "pga",
-      "Please select a valid seismic area.",
-    );
+    return createValidationError("pga", "Please select a valid seismic area.");
   }
 
   // Property Type Validation
@@ -30,14 +27,8 @@ export function validateRiskForm(data = {}) {
   // Stories Validation
   const stories = Number(data.stories);
 
-  if (
-    !Number.isInteger(stories) ||
-    stories <= 0
-  ) {
-    return createValidationError(
-      "stories",
-      "Invalid number of stories.",
-    );
+  if (!Number.isInteger(stories) || stories <= 0) {
+    return createValidationError("stories", "Invalid number of stories.");
   }
 
   return {
@@ -47,10 +38,7 @@ export function validateRiskForm(data = {}) {
 
 // Create Validation Error
 
-function createValidationError(
-  field,
-  message,
-) {
+function createValidationError(field, message) {
   return {
     valid: false,
     field,

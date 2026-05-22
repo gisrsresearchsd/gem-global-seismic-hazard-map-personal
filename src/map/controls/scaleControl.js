@@ -1,14 +1,14 @@
-import L from 'leaflet';
+import L from "leaflet";
 
-// Create Scale Control
-
+/* Create scale control */
 export function createScaleControl(map) {
-
-  L.control.scale({
-    position: 'bottomleft',
-
+  const scaleControl = L.control.scale({
+    position: "bottomleft",
     metric: true,
-
     imperial: false,
-  }).addTo(map);
+  });
+
+  scaleControl.addTo(map);
+
+  return scaleControl;
 }

@@ -1,41 +1,34 @@
-import {
-  BUILDING_TYPES,
-  RECOMMENDATION_TYPES,
-} from "../analysis/riskConstants";
+import { BUILDING_TYPES } from "../analysis/riskConstants";
 
-// Escape HTML
-
+/* Escape HTML */
 export function escapeHtml(text) {
   if (text === null || text === undefined) {
     return "";
   }
 
   const div = document.createElement("div");
+
   div.textContent = String(text);
 
   return div.innerHTML;
 }
 
-// Create Report Row
-
+/* Create report row */
 export function createReportRow(label, value) {
   return `
     <div class="report-row">
-
       <div class="report-label">
-        ${label}
+        ${escapeHtml(label)}
       </div>
 
       <div class="report-value">
         ${value}
       </div>
-
     </div>
   `;
 }
 
-// Format Building Type
-
+/* Format building type */
 export function formatBuildingType(buildingType) {
   switch (buildingType) {
     case BUILDING_TYPES.URM:
@@ -49,8 +42,7 @@ export function formatBuildingType(buildingType) {
   }
 }
 
-// Format Fault Label
-
+/* Format fault label */
 export function formatFaultLabel(nearestFault) {
   if (!nearestFault || !nearestFault.name) {
     return "No nearby fault detected";
@@ -65,11 +57,7 @@ export function formatFaultLabel(nearestFault) {
   return `${nearestFault.name} (${distance})`;
 }
 
-// Get Recommendation Class
-
-// src/risk/reports/reportHelpers.js
-
-export function getRecommendationClass(recommendationType) {
-  // Return the same class for EVERY recommendation type
+/* Get recommendation badge class */
+export function getRecommendationClass() {
   return "all-results-green";
 }

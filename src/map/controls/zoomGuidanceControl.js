@@ -1,78 +1,93 @@
-// src/map/controls/zoomGuidanceControl.js
-
 import L from "leaflet";
 
-// Create Zoom Guidance Control
-export function createZoomGuidanceControl(map) {
+const MIN_PGA_ZOOM = 4;
+const PRECISE_PGA_ZOOM = 6;
 
-  // Create Custom Control
-  const ZoomGuidanceControl = L.Control.extend({
+const GUIDANCE_STATES = {
+  warning: {
+    message:
+      "⚠️ Zoom to level 4+ for PGA values",
+    borderColor:
+      "rgba(239, 68, 68, 0.25)",
+  },
 
-    options: {
-      position: "topleft",
-    },
+  info: {
+    message:
+      "ℹ️ Zoom to level 6+ for precise PGA values",
+    borderColor:
+      "rgba(245, 158, 11, 0.25)",
+  },
 
-    onAdd() {
+  success: {
+    message:
+      "✓ Optimal zoom level for PGA analysis",
+    borderColor:
+      "rgba(34, 197, 94, 0.22)",
+  },
+};
 
-      // Create Container
-      const container = L.DomUtil.create(
-        "div",
-        "zoom-guidance-control"
-      );
+/* Get guidance state */
+function getGuidanceState(zoom) {
+  if (zoom < MIN_PGA_ZOOM) {
+    return GUIDANCE_STATES.warning;
+  }
 
-      // Initial Content
-      container.innerHTML =
-        "⚠️ Zoom to level 4+ for PGA values";
+  if (zoom < PRECISE_PGA_ZOOM) {
+    return GUIDANCE_STATES.info;
+  }
 
-      // Prevent Map Interaction
-      L.DomEvent.disableClickPropagation(container);
+  return GUIDANCE_STATES.success;
+}
 
-      // Update Guidance
-      const updateGuidance = () => {
+/* Create zoom guidance control */
+export function createZoomGuidanceControl(
+  map,
+) {
+  const ZoomGuidanceControl =
+    L.Control.extend({
+      options: {
+        position: "topleft",
+      },
 
-        const zoom = map.getZoom();
+      onAdd() {
+        const container =
+          L.DomUtil.create(
+            "div",
+            "zoom-guidance-control",
+          );
 
-        // Low Zoom
-        if (zoom < 4) {
+        L.DomEvent.disableClickPropagation(
+          container,
+        );
 
-          container.innerHTML =
-            "⚠️ Zoom to level 4+ for PGA values";
+        const updateGuidance = () => {
+          const zoom =
+            map.getZoom();
+
+          const state =
+            getGuidanceState(
+              zoom,
+            );
+
+          container.textContent =
+            state.message;
 
           container.style.borderColor =
-            "rgba(239, 68, 68, 0.25)";
-        }
+            state.borderColor;
+        };
 
-        // Medium Zoom
-        else if (zoom < 6) {
+        updateGuidance();
 
-          container.innerHTML =
-            "ℹ️ Zoom to level 6+ for precise PGA values";
+        map.on(
+          "zoomend",
+          updateGuidance,
+        );
 
-          container.style.borderColor =
-            "rgba(245, 158, 11, 0.25)";
-        }
+        return container;
+      },
+    });
 
-        // Optimal Zoom
-        else {
-
-          container.innerHTML =
-            "✓ Optimal zoom level for PGA analysis";
-
-          container.style.borderColor =
-            "rgba(34, 197, 94, 0.22)";
-        }
-      };
-
-      // Initial Update
-      updateGuidance();
-
-      // Listen To Zoom
-      map.on("zoomend", updateGuidance);
-
-      return container;
-    },
-  });
-
-  // Add Control To Map
-  map.addControl(new ZoomGuidanceControl());
+  map.addControl(
+    new ZoomGuidanceControl(),
+  );
 }

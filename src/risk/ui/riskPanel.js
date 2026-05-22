@@ -1,11 +1,8 @@
 import { getRiskPanelElements } from "./riskPanelElements";
-
-import { initializeAnalysisHandler } from "../handlers/analysisHandler";
-
+import { initializeAnalysisHandler } from "../handlers/riskAnalysisHandler";
 import { PROPERTY_TYPES } from "../analysis/riskConstants";
 
-// Initialize Risk Panel
-
+/* Initialize risk panel */
 export function initializeRiskPanel() {
   const elements = getRiskPanelElements();
 
@@ -54,8 +51,7 @@ export function initializeRiskPanel() {
   initializeAnalysisHandler(elements);
 }
 
-// Report Toggle
-
+/* Report toggle */
 function initializeReportToggle({ reportToggleBtn, reportSection }) {
   if (!reportToggleBtn || !reportSection) {
     return;
@@ -64,14 +60,11 @@ function initializeReportToggle({ reportToggleBtn, reportSection }) {
   reportToggleBtn.addEventListener("click", (event) => {
     event.stopPropagation();
 
-    const isCollapsed = toggleCollapsedState(reportSection);
-
-    reportToggleBtn.textContent = isCollapsed ? "+" : "−";
+    updateCollapseIndicator(reportSection, reportToggleBtn);
   });
 }
 
-// Field Validation
-
+/* Field validation */
 function initializeFieldValidation({
   propertyType,
   buildingTypeElement,
@@ -84,60 +77,60 @@ function initializeFieldValidation({
   removeFieldErrorOnChange(storiesElement, "input");
 }
 
-// Property Type Toggle
-
+/* Property type toggle */
 function initializePropertyTypeToggle({
   propertyType,
   seismicQuestion,
   documentsSection,
 }) {
-  hideElement(seismicQuestion);
-
-  hideElement(documentsSection);
-
   if (!propertyType) {
+    hideElement(seismicQuestion);
+    hideElement(documentsSection);
     return;
   }
 
-  propertyType.addEventListener("change", () => {
+  const updatePropertyUI = () => {
     const isLeaseRenewal = propertyType.value === PROPERTY_TYPES.LEASE_RENEWAL;
 
     toggleElement(seismicQuestion, isLeaseRenewal);
 
     toggleElement(documentsSection, !isLeaseRenewal);
-  });
+  };
+
+  propertyType.addEventListener("change", updatePropertyUI);
+
+  updatePropertyUI();
 }
 
-// Seismic Toggle
-
+/* Seismic assessment toggle */
 function initializeSeismicToggle({ seismicAssessment, documentsSection }) {
   if (!seismicAssessment) {
     return;
   }
 
-  seismicAssessment.addEventListener("change", () => {
+  const updateSeismicUI = () => {
     const hasAssessment = seismicAssessment.value === "yes";
 
     toggleElement(documentsSection, !hasAssessment);
-  });
+  };
+
+  seismicAssessment.addEventListener("change", updateSeismicUI);
+
+  updateSeismicUI();
 }
 
-// Document Toggle
-
+/* Document list toggle */
 function initializeDocumentToggle({ toggleButton, documentList, toggleIcon }) {
   if (!toggleButton || !documentList || !toggleIcon) {
     return;
   }
 
   toggleButton.addEventListener("click", () => {
-    const isCollapsed = toggleCollapsedState(documentList);
-
-    toggleIcon.innerHTML = isCollapsed ? "+" : "−";
+    updateCollapseIndicator(documentList, toggleIcon);
   });
 }
 
-// Remove Field Error
-
+/* Remove field error on change */
 function removeFieldErrorOnChange(element, eventType) {
   if (!element) {
     return;
@@ -148,8 +141,7 @@ function removeFieldErrorOnChange(element, eventType) {
   });
 }
 
-// Toggle Element
-
+/* Show or hide element */
 function toggleElement(element, shouldShow) {
   if (!element) {
     return;
@@ -158,8 +150,7 @@ function toggleElement(element, shouldShow) {
   element.classList.toggle("hidden", !shouldShow);
 }
 
-// Hide Element
-
+/* Hide element */
 function hideElement(element) {
   if (!element) {
     return;
@@ -168,10 +159,16 @@ function hideElement(element) {
   element.classList.add("hidden");
 }
 
-// Toggle Collapsed State
-
+/* Toggle collapsed state */
 function toggleCollapsedState(element) {
   element.classList.toggle("collapsed");
 
   return element.classList.contains("collapsed");
+}
+
+/* Update + / − indicator */
+function updateCollapseIndicator(targetElement, indicatorElement) {
+  const isCollapsed = toggleCollapsedState(targetElement);
+
+  indicatorElement.textContent = isCollapsed ? "+" : "−";
 }

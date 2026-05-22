@@ -1,89 +1,190 @@
 /* ========================================
-   APPLICATION HEADER
+   App Header
 ======================================== */
 
-/* Header */
+/* Header shell */
 .app-header {
-  height: 64px;
+  position: relative;
+  z-index: var(--z-sidebar);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  min-height: 64px;
   padding: 0 var(--spacing-lg);
-  background: rgba(7, 12, 21, 0.85);
-  border-bottom: 1px solid var(--border-color);
+
+  background: rgba(7, 12, 21, 0.75);
+  border-bottom: 1px solid var(--border);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+
   box-shadow: var(--shadow-sm);
-  position: relative;
-  z-index: var(--z-sidebar);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-/* Header Gradient Accent */
+.app-header:hover {
+  background: rgba(7, 12, 21, 0.85);
+  box-shadow: var(--shadow-md);
+}
+
+/* Bottom accent line */
 .app-header::before {
-  content: '';
+  content: "";
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: auto 0 0 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--primary-color), var(--accent-teal), transparent);
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--accent-teal),
+    var(--accent-purple),
+    transparent
+  );
+  background-size: 200% auto;
+  transform: translateX(-100%);
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.app-header:hover::before {
+  transform: translateX(0%);
+}
+
+/* Top subtle glow */
+.app-header::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+/* ===== LOGO STYLES - RIGHT CORNER ===== */
+.header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto; /* Pushes logo to the right */
+}
+
+.header-logo img {
+  height: 28px; /* Smaller size for right corner */
+  width: auto;
+  display: block;
+  transition: transform var(--transition-bounce), opacity var(--transition-fast);
+  filter: brightness(0) invert(1); /* Converts dark logo to white */
+  opacity: 0.85;
+}
+
+.header-logo img:hover {
+  transform: scale(1.05);
+  opacity: 1;
+  filter: brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0, 102, 179, 0.3));
+}
+
+/* Optional: Add a subtle separator before logo */
+.header-right::before {
+  content: "";
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg, transparent, var(--border-light), transparent);
+  margin-right: var(--spacing-md);
+}
+
+/* Title wrapper */
+.header-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 /* Title */
 .app-header h1 {
-  margin: 0;
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.3px;
-  color: var(--text-primary);
   white-space: nowrap;
-  background: linear-gradient(135deg, #fff, var(--text-secondary));
+  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  transition: letter-spacing var(--transition-fast);
+}
+
+.app-header h1:hover {
+  letter-spacing: -0.2px;
 }
 
 /* Subtitle */
-.app-header .header-subtitle {
+.header-subtitle {
   margin-left: var(--spacing-sm);
+  padding: 4px 12px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--text-muted);
   letter-spacing: 0.3px;
+  color: var(--text-muted);
   background: var(--bg-control);
-  padding: 4px 10px;
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  border: 1px solid var(--border-color);
+  transition: all var(--transition-bounce);
+  cursor: default;
 }
 
-/* Header Sections */
-.header-left {
+.header-subtitle:hover {
+  color: var(--text-primary);
+  background: rgba(var(--primary-rgb), 0.15);
+  border-color: rgba(var(--primary-rgb), 0.3);
+  transform: translateY(-1px);
+}
+
+/* Header groups */
+.header-left,
+.header-right {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
 }
 
 .header-right {
-  display: flex;
-  align-items: center;
   gap: var(--spacing-sm);
 }
 
-/* ========================================
-   RESPONSIVE
-======================================== */
-
+/* Mobile */
 @media (max-width: 768px) {
   .app-header {
-    height: 56px;
+    min-height: 56px;
     padding: 0 var(--spacing-md);
   }
 
-  .app-header h1 {
-    font-size: 16px;
+  .header-logo img {
+    height: 22px; /* Even smaller on mobile */
   }
 
-  .app-header .header-subtitle {
+  .app-header h1 {
+    font-size: 14px;
+  }
+
+  .header-subtitle {
     display: none;
+  }
+  
+  .header-right::before {
+    height: 18px;
+    margin-right: var(--spacing-sm);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .app-header::before {
+    transition: none;
+    transform: translateX(0);
+    opacity: 0.6;
+  }
+  
+  .header-logo img:hover {
+    transform: none;
   }
 }

@@ -2,7 +2,7 @@ import { DOCUMENT_TYPES } from "./riskConstants";
 
 // Get Document Checks
 
-export function getDocumentChecks(selectedDocuments) {
+export function getDocumentChecks(selectedDocuments = []) {
   // Individual Documents
   const hasStructuralDesignReport = hasDocument(
     selectedDocuments,
@@ -71,12 +71,14 @@ export function getDocumentChecks(selectedDocuments) {
     tier3DocumentCount > 0 && tier3DocumentCount < 3;
 
   const hasAnyRelevantDocuments =
-  hasStructuralDesignReport ||
-  hasArchitecturalDrawings ||
-  hasStructuralAsBuilt ||
-  hasFloorPlan ||
-  hasDigitalStructuralModel ||
-  hasGeotechnicalReport;
+    [
+      hasStructuralDesignReport,
+      hasArchitecturalDrawings,
+      hasStructuralAsBuilt,
+      hasFloorPlan,
+      hasDigitalStructuralModel,
+      hasGeotechnicalReport,
+    ].some(Boolean);
 
   return {
     // Individual Documents

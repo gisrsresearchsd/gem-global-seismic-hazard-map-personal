@@ -1,328 +1,579 @@
 /* ========================================
-   MAP SECTION
+   MAP SECTION - COMPLETE MODERNIZED VERSION
+   Enhanced with glassmorphism, animations, and premium styling
 ======================================== */
 
-/* ========================================
-   MAP WRAPPER
-======================================== */
-
+/* MAP WRAPPER - MODERNIZED */
 .map-section {
   flex: 1;
-
   position: relative;
-
-  overflow: hidden;
-
   min-width: 0;
-
+  overflow: hidden;
   background: var(--bg-app);
 }
 
-/* ========================================
-   LEAFLET MAP
-======================================== */
-
+/* Enhanced map container with subtle inner shadow */
 #map {
   width: 100%;
-
   height: 100%;
-
   z-index: var(--z-base);
-
-  background: #0a0f1a;
+  background: linear-gradient(135deg, #1a1f2e 0%, #0a0f1a 100%);
+  position: relative;
 }
 
-/* ========================================
-   LEAFLET DEFAULT ATTRIBUTION
-======================================== */
-
-.leaflet-control-attribution {
-  background: var(--bg-control);
-
-  backdrop-filter: blur(12px);
-
-  border-top: 1px solid var(--border-color);
-
-  border-left: 1px solid var(--border-color);
-
-  border-radius: var(--radius-md) 0 0 0;
-
-  padding: 3px 8px;
-
-  font-size: 8px;
-
-  color: var(--text-muted);
-
-  opacity: 0.45;
-
-  transform: scale(0.92);
-
-  transform-origin: bottom right;
-}
-
-.leaflet-control-attribution a {
-  color: var(--text-secondary);
-
-  transition: color var(--transition-fast);
-}
-
-.leaflet-control-attribution a:hover {
-  color: var(--primary-light);
-}
-
-/* ========================================
-   MAP COORDINATE ANCHOR
-======================================== */
-
-.map-coordinate-anchor {
+/* Add subtle vignette effect over the map */
+#map::after {
+  content: '';
   position: absolute;
-
-  left: 50%;
-
-  bottom: var(--spacing-md);
-
-  transform: translateX(-50%);
-
-  z-index: var(--z-control);
-
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.15) 100%);
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Smooth zoom transitions */
+.leaflet-zoom-animated {
+  transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+/* Enhanced tile fade-in */
+.leaflet-tile {
+  opacity: 0;
+  animation: tileFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes tileFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Tile loading animation */
+.leaflet-tile-loaded {
+  animation: tileLoadFade 0.4s ease-out;
+}
+
+@keyframes tileLoadFade {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ========================================
-   DATA SOURCES PANEL
+   PREMIUM POPUPS & MARKERS
 ======================================== */
 
+/* Modern popup design */
+.leaflet-popup-content-wrapper {
+  background: rgba(12, 18, 24, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05) inset !important;
+  padding: 4px 0 !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(12, 18, 24, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: none !important;
+}
+
+.leaflet-popup-content {
+  margin: 12px 20px !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: var(--text-primary) !important;
+}
+
+/* Popup close button */
+.leaflet-popup-close-button {
+  color: var(--text-muted) !important;
+  font-size: 18px !important;
+  transition: all 0.2s ease !important;
+  right: 8px !important;
+  top: 8px !important;
+}
+
+.leaflet-popup-close-button:hover {
+  color: var(--danger) !important;
+  transform: rotate(90deg);
+}
+
+/* Animated markers */
+.leaflet-marker-icon {
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}
+
+.leaflet-marker-icon:hover {
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Custom circle marker animations */
+.leaflet-circle-marker {
+  animation: markerPulse 2s ease-in-out infinite;
+}
+
+@keyframes markerPulse {
+  0%, 100% {
+    r: 10;
+    opacity: 0.9;
+  }
+  50% {
+    r: 14;
+    opacity: 0.6;
+  }
+}
+
+/* ========================================
+   PREMIUM ATTRIBUTION PANEL
+======================================== */
+
+/* Attribution container */
 .map-attribution-container {
   position: absolute;
-
   left: var(--spacing-md);
-
   bottom: 58px;
-
   z-index: var(--z-control);
 }
 
-/* Main Panel */
-
+/* Attribution panel premium */
 .map-attribution-panel {
-  width: 220px;
-
+  width: 280px;
+  background: rgba(12, 18, 24, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 20px !important;
   overflow: hidden;
-
-  border-radius: var(--radius-xl);
+  transition: all 0.3s ease !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* ========================================
-   PANEL HEADER
-======================================== */
+.map-attribution-panel:hover {
+  background: rgba(12, 18, 24, 0.95) !important;
+  border-color: rgba(0, 102, 179, 0.3) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 102, 179, 0.1) !important;
+}
 
+/* Panel header */
 .map-attribution-header {
-  list-style: none;
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
-  min-height: 34px;
-
-  padding: 0 14px;
-
+  min-height: 40px !important;
+  padding: 0 18px !important;
+  list-style: none;
   cursor: pointer;
-
   user-select: none;
-
   color: var(--text-primary);
-
-  font-size: 11px;
-
-  font-weight: 700;
-
-  letter-spacing: 0.3px;
-
-  transition: opacity var(--transition-fast);
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  background: linear-gradient(135deg, rgba(0, 102, 179, 0.1), transparent) !important;
+  transition: all var(--transition-fast);
 }
 
 .map-attribution-header:hover {
-  opacity: 0.85;
+  background: linear-gradient(135deg, rgba(0, 102, 179, 0.15), rgba(0, 102, 179, 0.05)) !important;
 }
 
-/* Remove Default Marker */
-
+/* Hide default marker */
 .map-attribution-header::-webkit-details-marker {
   display: none;
 }
 
-/* Toggle Icon */
-
+/* Toggle icon */
 .map-attribution-header::after {
   content: "+";
-
-  font-size: 15px;
-
+  font-size: 16px;
   font-weight: 500;
-
   line-height: 1;
+  transition: transform var(--transition-fast);
 }
 
-.map-attribution-panel[open]
-.map-attribution-header::after {
+/* Expanded state */
+.map-attribution-panel[open] .map-attribution-header::after {
   content: "−";
 }
 
-/* ========================================
-   PANEL CONTENT
-======================================== */
-
+/* Panel content */
 .map-attribution-content {
   display: flex;
-
   flex-direction: column;
-
-  gap: 10px;
-
-  padding: 12px 14px;
-
-  max-height: 300px;
-
+  gap: 12px;
+  max-height: 320px;
+  padding: 16px 18px !important;
   overflow-y: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-/* ========================================
-   ATTRIBUTION ITEM
-======================================== */
-
+/* Attribution item */
 .map-attribution-item {
   display: flex;
-
   flex-direction: column;
-
-  gap: 4px;
-
-  padding-bottom: 10px;
-
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  gap: 6px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: transform 0.2s ease !important;
 }
 
 .map-attribution-item:last-child {
-  border-bottom: none;
-
   padding-bottom: 0;
+  border-bottom: none;
 }
 
-/* ========================================
-   TYPOGRAPHY
-======================================== */
+.map-attribution-item:hover {
+  transform: translateX(8px);
+}
 
+/* Typography */
 .map-attr-title {
-  font-size: 11px;
-
-  font-weight: 600;
-
-  color: var(--text-primary);
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--accent-blue) !important;
+  margin-bottom: 4px !important;
+  letter-spacing: 0.3px;
 }
 
+/* Item description */
 .map-attr-description {
   font-size: 11px;
-
   line-height: 1.5;
-
   color: var(--text-secondary);
 }
 
-/* ========================================
-   LINKS
-======================================== */
-
+/* Source links */
 .map-attribution-item a {
   width: fit-content;
-
   color: var(--accent-blue);
-
-  text-decoration: none;
-
   font-size: 11px;
-
   font-weight: 500;
-
-  transition: opacity var(--transition-fast);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  padding: 2px 0;
 }
 
 .map-attribution-item a:hover {
-  opacity: 0.75;
+  opacity: 0.8;
+  text-decoration: underline;
+  transform: translateX(4px);
 }
 
-/* ========================================
-   FOOTER NOTE
-======================================== */
-
+/* Footer note */
 .map-attribution-note {
-  margin-top: 4px;
-
+  margin-top: 8px;
   padding-top: 10px;
-
-  border-top: 1px solid rgba(255,255,255,0.04);
-
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
   color: var(--text-muted);
-
   font-size: 10px;
-
   line-height: 1.5;
+  font-style: italic;
 }
 
-/* ========================================
-   SCROLLBAR
-======================================== */
-
+/* Panel scrollbar */
 .map-attribution-content::-webkit-scrollbar {
   width: 4px;
 }
 
 .map-attribution-content::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
 }
 
 .map-attribution-content::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.18);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+}
 
-  border-radius: 10px;
+.map-attribution-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* ========================================
-   RESPONSIVE
+   COORDINATE DISPLAY
 ======================================== */
 
-@media (max-width: 768px) {
+.map-coordinate-anchor {
+  position: absolute;
+  left: 50%;
+  bottom: var(--spacing-md);
+  z-index: var(--z-control);
+  pointer-events: none;
+  transform: translateX(-50%);
+}
 
-  .map-section {
-    width: 100%;
+/* ========================================
+   MAP LOADING STATES
+======================================== */
 
-    min-height: 0;
+/* Map loading overlay */
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--z-modal);
+  background: rgba(12, 18, 24, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 40px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  pointer-events: none;
+  animation: loadingFadeIn 0.3s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-    flex: 1;
+.map-loading::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+
+
+@keyframes loadingFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
   }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   LEAFLET DEFAULT OVERRIDES
+======================================== */
+
+/* Remove default Leaflet attribution styling */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* Ensure map container fills properly */
+.leaflet-container {
+  font-family: var(--font-family-base);
+}
+
+/* Improve map tile rendering */
+.leaflet-tile-pane {
+  filter: brightness(0.95) contrast(1.05);
+}
+
+/* Smooth panning */
+.leaflet-grab {
+  cursor: grab;
+}
+
+.leaflet-grabbing {
+  cursor: grabbing;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .map-attribution-panel {
+    width: 260px;
+  }
+  
+  .map-attribution-content {
+    max-height: 280px;
+    padding: 14px 16px;
+  }
+  
+  .map-attr-title {
+    font-size: 11px;
+  }
+  
+  .map-attr-description {
+    font-size: 10px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .map-section {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+  }
+  
   .map-coordinate-anchor {
     bottom: var(--spacing-sm);
   }
-
-  .leaflet-control-attribution {
-    font-size: 7px;
-
-    padding: 2px 6px;
-  }
-
+  
   .map-attribution-container {
-    left: 10px;
-
     right: 10px;
-
+    left: auto;
     bottom: 56px;
   }
-
+  
   .map-attribution-panel {
-    width: 100%;
+    width: 240px;
   }
+  
+  .map-attribution-header {
+    min-height: 36px;
+    padding: 0 14px;
+    font-size: 11px;
+  }
+  
+  .map-attribution-content {
+    max-height: 260px;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  
+  .map-attribution-item {
+    gap: 4px;
+    padding-bottom: 10px;
+  }
+  
+  .map-attr-title {
+    font-size: 10px;
+  }
+  
+  .map-attr-description,
+  .map-attribution-item a {
+    font-size: 10px;
+  }
+  
+  .map-attribution-note {
+    font-size: 9px;
+  }
+  
+  /* Disable hover effects on mobile */
+  .map-attribution-item:hover {
+    transform: none;
+  }
+  
+  .map-attribution-panel:hover {
+    transform: none;
+  }
+}
 
+/* Small mobile */
+@media (max-width: 480px) {
+  .map-attribution-panel {
+    width: 220px;
+  }
+  
+  .map-attribution-content {
+    padding: 10px 12px;
+  }
+  
+  .map-attr-title {
+    font-size: 10px;
+  }
+  
+  .map-attr-description,
+  .map-attribution-item a {
+    font-size: 9px;
+  }
+}
+
+/* ========================================
+   TOUCH DEVICE OPTIMIZATIONS
+======================================== */
+
+@media (hover: none) and (pointer: coarse) {
+  .map-attribution-header {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .map-attribution-header:active {
+    background: linear-gradient(135deg, rgba(0, 102, 179, 0.2), rgba(0, 102, 179, 0.1));
+  }
+  
+  .map-attribution-item:active {
+    transform: translateX(4px);
+  }
+}
+
+/* ========================================
+   HIGH CONTRAST MODE
+======================================== */
+
+@media (prefers-contrast: high) {
+  .map-attribution-panel {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .map-attribution-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .map-attribution-item a {
+    text-decoration: underline;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION PREFERENCE
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .leaflet-zoom-animated,
+  .leaflet-tile,
+  .leaflet-marker-icon,
+  .map-attribution-panel,
+  .map-attribution-item {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .leaflet-tile {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .map-loading {
+    animation: none;
+  }
+  
+  .leaflet-popup-close-button:hover {
+    transform: none;
+  }
+  
+  .map-attribution-item:hover {
+    transform: none;
+  }
 }

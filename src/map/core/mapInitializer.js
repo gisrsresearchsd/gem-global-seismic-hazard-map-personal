@@ -1,28 +1,28 @@
-// src/map/core/mapInitializer.js
-
 import L from "leaflet";
 
 import { APP_CONFIG } from "../../config/appConfig";
+
 import { BASE_MAPS } from "../basemaps/baseMaps";
 import { createBaseMapControl } from "../basemaps/baseMapControl";
 
-import { createZoomControl } from "../controls/zoomControl";
-import { createScaleControl } from "../controls/scaleControl";
 import { createCoordinateControl } from "../controls/coordinateControl";
-import { createLegendControl } from "../controls/legendControl";
-import { createSearchControl } from "../controls/searchControl";
-import { createResetControl } from "../controls/resetControl";
-import { createZoomGuidanceControl } from "../controls/zoomGuidanceControl";
 import { createLayerControl } from "../controls/layerControl";
+import { createLegendControl } from "../controls/legendControl";
+import { createResetControl } from "../controls/resetControl";
+import { createScaleControl } from "../controls/scaleControl";
+import { createSearchControl } from "../controls/searchControl";
+import { createZoomControl } from "../controls/zoomControl";
+import { createZoomGuidanceControl } from "../controls/zoomGuidanceControl";
 
 import { pgaVisualizationLayer, loadHiddenRaster } from "../layers/pgaLayer";
-
 import { loadCountryLayer } from "../layers/countryLayer";
 import { loadFaultLayer } from "../layers/faultLayer";
 
-import { analyzeLocation } from "./analysisHandler";
+import { analyzeLocation } from "./locationAnalysisHandler";
 
-// Initialize Main Map
+const OVERLAY_PANE_Z_INDEX = 400;
+
+// Initialize main map
 export async function initializeMap() {
   const map = L.map("map", {
     zoomControl: false,
@@ -34,53 +34,29 @@ export async function initializeMap() {
     worldCopyJump: true,
   });
 
-  /*
-  =====================
-  Overlay Pane
-  =====================
-  */
-  map.createPane("overlayPane");
-  map.getPane("overlayPane").style.zIndex = 400;
+  /* Overlay pane */
+  const overlayPane = map.createPane("overlayPane");
+  overlayPane.style.zIndex = OVERLAY_PANE_Z_INDEX;
 
-  /*
-  =====================
-  Base Map
-  =====================
-  */
+  /* Base map */
   BASE_MAPS[APP_CONFIG.MAP.DEFAULT_BASEMAP].addTo(map);
 
-  /*
-  =====================
-  Layers
-  =====================
-  */
-
-  // PGA
+  /* Layers */
   pgaVisualizationLayer.addTo(map);
 
-  // Hidden raster
   loadHiddenRaster();
 
-  // Fault
   const faultLayer = await loadFaultLayer(map);
 
-  // Country
   const countryLayer = await loadCountryLayer(map);
 
-  /*
-  =====================
-  Controls
-  =====================
-  */
+  /* Controls */
   createZoomControl(map);
-
   createBaseMapControl(map, [pgaVisualizationLayer]);
 
   createScaleControl(map);
-
   createCoordinateControl(map);
 
-  // Add LAYER FIRST
   createLayerControl({
     map,
     pgaLayer: pgaVisualizationLayer,
@@ -88,23 +64,15 @@ export async function initializeMap() {
     countryLayer,
   }).addTo(map);
 
-  // Add LEGEND SECOND
   createLegendControl(map);
-
   createResetControl(map);
-
   createZoomGuidanceControl(map);
 
   createSearchControl(map, analyzeLocation);
 
-  /*
-  =====================
-  Click Analysis
-  =====================
-  */
-  map.on("click", (event) => {
-    const { lat, lng } = event.latlng;
-
+  /* Click analysis */
+  map.on("click", ({ latlng }) => {
+    const { lat, lng } = latlng;
     analyzeLocation(map, lat, lng);
   });
 
