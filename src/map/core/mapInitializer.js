@@ -33,6 +33,8 @@ export async function initializeMap() {
     maxZoom: APP_CONFIG.MAP.MAX_ZOOM,
     maxBounds: APP_CONFIG.MAP.WORLD_BOUNDS,
     worldCopyJump: true,
+
+    
   });
 
   /* Overlay pane */

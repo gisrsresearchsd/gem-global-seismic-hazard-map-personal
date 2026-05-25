@@ -35,86 +35,57 @@ export async function loadCountryLayer(map) {
     const url =
       "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson";
 
-    const response =
-      await fetch(url);
+    const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}`,
-      );
+      throw new Error(`HTTP ${response.status}`);
     }
 
-    const text =
-      await response.text();
+    const text = await response.text();
 
-    const trimmedText =
-      text.trim().toLowerCase();
+    const trimmedText = text.trim().toLowerCase();
 
     if (
-      trimmedText.startsWith(
-        "<!doctype",
-      ) ||
-      trimmedText.startsWith(
-        "<html",
-      )
+      trimmedText.startsWith("<!doctype") ||
+      trimmedText.startsWith("<html")
     ) {
-      throw new Error(
-        "GeoJSON URL returned HTML instead of JSON",
-      );
+      throw new Error("GeoJSON URL returned HTML instead of JSON");
     }
 
-    const geojson =
-      JSON.parse(text);
+    const geojson = JSON.parse(text);
 
-    countryLayer =
-      L.geoJSON(
-        geojson,
-        {
-          style:
-            DEFAULT_COUNTRY_STYLE,
+    countryLayer = L.geoJSON(geojson, {
+      style: DEFAULT_COUNTRY_STYLE,
 
-          onEachFeature(
-            feature,
-            layer,
-          ) {
-            layer.bindTooltip(
-              getCountryName(
-                feature,
-              ),
-              {
-                sticky: true,
-              },
-            );
+      onEachFeature(feature, layer) {
+  const originalStyle = {
+    color: "#64748b",
+    weight: 1,
+    fillOpacity: 0,
+  };
 
-            layer.on(
-              "mouseover",
-              () => {
-                layer.setStyle(
-                  HOVER_COUNTRY_STYLE,
-                );
-              },
-            );
+  layer.bindTooltip(getCountryName(feature), {
+    sticky: true,
+  });
 
-            layer.on(
-              "mouseout",
-              () => {
-                countryLayer.resetStyle(
-                  layer,
-                );
-              },
-            );
-          },
-        },
-      );
+  layer.on("mouseover", () => {
+    layer.setStyle({
+      color: "#2563eb",
+      weight: 2,
+    });
+  });
+
+  layer.on("mouseout", () => {
+    layer.setStyle(originalStyle);
+  });
+},
+    });
 
     countryLayer.addTo(map);
 
     return countryLayer;
   } catch (error) {
-    console.error(
-      "Country layer error:",
-      error,
-    );
+    console.error("Country layer error:", error);
 
     return null;
   }

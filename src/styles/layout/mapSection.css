@@ -510,6 +510,48 @@
 }
 
 /* ========================================
+   FLICKERING FIX - Disable transitions on map layers
+======================================== */
+
+/* Disable all animations on map tiles during pan */
+.leaflet-tile,
+.leaflet-tile-loaded,
+.leaflet-zoom-animated .leaflet-tile {
+  animation: none !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+/* Disable SVG transitions on country layer */
+.leaflet-overlay-pane svg,
+.leaflet-overlay-pane path,
+.leaflet-overlay-pane polyline,
+.leaflet-overlay-pane polygon {
+  transition: none !important;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Force hardware acceleration */
+#map,
+.leaflet-container,
+.leaflet-overlay-pane {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Keep fault line animation but optimize */
+.fault-distance-line {
+  animation: dashMove 1.2s linear infinite;
+  will-change: stroke-dashoffset;
+}
+
+/* Disable tile fade animations during pan */
+.leaflet-fade-anim .leaflet-tile {
+  will-change: auto;
+}
+
+/* ========================================
    TOUCH DEVICE OPTIMIZATIONS
 ======================================== */
 
