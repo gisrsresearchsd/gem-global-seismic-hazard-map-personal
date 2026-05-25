@@ -15,6 +15,7 @@ import { createZoomControl } from "../controls/zoomControl";
 import { createZoomGuidanceControl } from "../controls/zoomGuidanceControl";
 
 import { pgaVisualizationLayer, loadHiddenRaster } from "../layers/pgaLayer";
+
 import { loadCountryLayer } from "../layers/countryLayer";
 import { loadFaultLayer } from "../layers/faultLayer";
 
@@ -22,7 +23,7 @@ import { analyzeLocation } from "./locationAnalysisHandler";
 
 const OVERLAY_PANE_Z_INDEX = 400;
 
-// Initialize main map
+/* Initialize main map */
 export async function initializeMap() {
   const map = L.map("map", {
     zoomControl: false,
@@ -36,6 +37,7 @@ export async function initializeMap() {
 
   /* Overlay pane */
   const overlayPane = map.createPane("overlayPane");
+
   overlayPane.style.zIndex = OVERLAY_PANE_Z_INDEX;
 
   /* Base map */
@@ -44,20 +46,19 @@ export async function initializeMap() {
   /* Layers */
   const faultLayer = await loadFaultLayer(map);
 
-
   const countryLayer = await loadCountryLayer(map);
-  countryLayer.addTo(map);
+
+  if (countryLayer) {
+    countryLayer.addTo(map);
+  }
 
   pgaVisualizationLayer.addTo(map);
 
-  loadHiddenRaster();
-
-
-
-  
+  await loadHiddenRaster();
 
   /* Controls */
   createZoomControl(map);
+
   createBaseMapControl(map, [pgaVisualizationLayer]);
 
   createScaleControl(map);
@@ -79,6 +80,7 @@ export async function initializeMap() {
   /* Click analysis */
   map.on("click", ({ latlng }) => {
     const { lat, lng } = latlng;
+
     analyzeLocation(map, lat, lng);
   });
 

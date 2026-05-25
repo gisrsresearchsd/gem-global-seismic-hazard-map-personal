@@ -2,7 +2,7 @@ import L from "leaflet";
 import * as turf from "@turf/turf";
 
 /* Constants */
-const MIN_FAULT_ZOOM = 4;
+export const MIN_FAULT_ZOOM = 4;
 
 /* Fault GeoJSON reference */
 let faultGeoJSON = null;
@@ -16,45 +16,25 @@ export let faultLayerEnabled = true;
 /* Active distance line */
 let activeDistanceLine = null;
 
-/* Toggle fault layer visibility */
-export function setFaultLayerVisibility(map, enabled) {
-  faultLayerEnabled = enabled;
-  updateFaultVisibility(map);
-}
-
-/* Load fault layer */
-export async function loadFaultLayer(map) {
-  try {
-    const response = await fetch(
-      `${import.meta.env.BASE_URL}data/fault_Lines.geojson`,
-    );
-
-    faultGeoJSON = await response.json();
-
-    faultLayer = L.geoJSON(faultGeoJSON, {
-      style: {
-        color: "#ff6b6b",
-        weight: 1.5,
-        opacity: 0.8,
-      },
-      pane: "overlayPane",
-    });
-
-    updateFaultVisibility(map);
-
-    map.on("zoomend", () => {
-      updateFaultVisibility(map);
-    });
-
-    return faultLayer;
-  } catch (error) {
-    console.error("Fault layer failed:", error);
-
-    return null;
+/*Shared Cleanup*/
+function clearActiveDistanceLine(map) {
+  if (!activeDistanceLine) {
+    return;
   }
+
+  if (map.hasLayer(activeDistanceLine)) {
+    map.removeLayer(activeDistanceLine);
+  }
+
+  activeDistanceLine = null;
 }
 
-/* Show/hide based on zoom + user toggle */
+/*Public Cleanup API*/
+export function clearFaultDistanceLine(map) {
+  clearActiveDistanceLine(map);
+}
+
+/*Fault Visibility*/
 function updateFaultVisibility(map) {
   if (!faultLayer) {
     return;
@@ -76,42 +56,45 @@ function updateFaultVisibility(map) {
   }
 }
 
-/* Clear active distance line */
-export function clearFaultDistanceLine(
-  map
-) {
-  if (
-    !activeDistanceLine
-  ) {
-    return;
-  }
+/*External Toggle API*/
+export function setFaultLayerVisibility(map, enabled) {
+  faultLayerEnabled = enabled;
+  updateFaultVisibility(map);
+}
 
-  if (
-    map.hasLayer(
-      activeDistanceLine
-    )
-  ) {
-    map.removeLayer(
-      activeDistanceLine
+/*Load Fault Layer*/
+export async function loadFaultLayer(map) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.BASE_URL}data/fault_Lines.geojson`,
     );
-  }
 
-  activeDistanceLine =
-    null;
+    faultGeoJSON = await response.json();
+
+    faultLayer = L.geoJSON(faultGeoJSON, {
+      style: {
+        color: "#ff6b6b",
+        weight: 1.5,
+        opacity: 0.8,
+      },
+      pane: "overlayPane",
+    });
+
+    updateFaultVisibility(map);
+
+    const handleZoomEnd = () => updateFaultVisibility(map);
+
+    map.on("zoomend", handleZoomEnd);
+
+    return faultLayer;
+  } catch (error) {
+    console.error("Fault layer failed:", error);
+
+    return null;
+  }
 }
 
-/* Clear active distance line */
-function clearDistanceLine(map) {
-  if (!activeDistanceLine) {
-    return;
-  }
-
-  map.removeLayer(activeDistanceLine);
-
-  activeDistanceLine = null;
-}
-
-/* Process single fault line */
+/*Process Single Fault*/
 function processFaultLine({
   lineFeature,
   originalFeature,
@@ -133,28 +116,31 @@ function processFaultLine({
   return {
     distance,
     nearestPoint,
-    fault: originalFeature || lineFeature,
+    fault: originalFeature,
   };
 }
 
-/* Find nearest fault */
+/*Find Nearest Fault*/
 export function getNearestFault(map, lat, lng) {
   if (!faultGeoJSON?.features?.length) {
     return null;
   }
 
   try {
-    clearDistanceLine(map);
+    clearActiveDistanceLine(map);
 
     const clickedPoint = turf.point([lng, lat]);
 
     let nearestFault = null;
+
     let minimumDistance = Infinity;
+
     let nearestPoint = null;
 
     faultGeoJSON.features.forEach((feature) => {
       const geometryType = feature.geometry?.type;
 
+      /* LineString */
       if (geometryType === "LineString") {
         const result = processFaultLine({
           lineFeature: feature,
@@ -170,6 +156,7 @@ export function getNearestFault(map, lat, lng) {
         }
       }
 
+      /* MultiLineString */
       if (geometryType === "MultiLineString") {
         const flattened = turf.flatten(feature);
 

@@ -21,10 +21,8 @@ export function generateRiskReport({
   selectedDocuments,
   nearestFault,
 }) {
-  const recommendationClass = getRecommendationClass(recommendationType);
-
+  const recommendationClass = getRecommendationClass();
   const buildingLabel = formatBuildingType(buildingType) || "Unknown";
-
   const faultLabel = formatFaultLabel(nearestFault) || "Unknown";
 
   const reportRows = generateReportRows({

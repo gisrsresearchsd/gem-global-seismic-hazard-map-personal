@@ -1,14 +1,16 @@
 import L from "leaflet";
 
+
+import {
+  setFaultLayerVisibility,
+  MIN_FAULT_ZOOM,
+} from "../layers/faultLayer";
+
 /* Layer control refs */
 let layerRefs = null;
 
 /* Toggle layer safely */
-function toggleLayerVisibility(
-  map,
-  layer,
-  visible,
-) {
+function toggleLayerVisibility(map, layer, visible) {
   if (!layer) {
     return;
   }
@@ -26,10 +28,7 @@ function toggleLayerVisibility(
 }
 
 /* Slider state */
-function setSliderState(
-  slider,
-  enabled,
-) {
+function setSliderState(slider, enabled) {
   if (!slider) {
     return;
   }
@@ -53,43 +52,27 @@ function syncLayerUI(map) {
     opacitySlider,
   } = layerRefs;
 
-  pgaToggle.checked =
-    map.hasLayer(pgaLayer);
+  pgaToggle.checked = map.hasLayer(pgaLayer);
 
-  countryToggle.checked =
-    map.hasLayer(
-      countryLayer,
-    );
+  countryToggle.checked = map.hasLayer(countryLayer);
 
-  const canUseFault =
-    map.getZoom() >= 4;
+  const canUseFault = map.getZoom() >= MIN_FAULT_ZOOM;
 
-  faultToggle.disabled =
-    !canUseFault;
+  faultToggle.disabled = !canUseFault;
 
-  faultToggle.checked =
-    canUseFault &&
-    map.hasLayer(
-      faultLayer,
-    );
+  faultToggle.checked = canUseFault && map.hasLayer(faultLayer);
 
-  setSliderState(
-    opacitySlider,
-    pgaToggle.checked,
-  );
+  setSliderState(opacitySlider, pgaToggle.checked);
 }
 
 /* Reset layer state */
-export function resetLayerControl(
-  map,
-) {
+export function resetLayerControl(map) {
   if (!layerRefs) {
     return;
   }
 
   const {
     pgaLayer,
-    faultLayer,
     countryLayer,
     pgaToggle,
     faultToggle,
@@ -97,38 +80,19 @@ export function resetLayerControl(
     opacitySlider,
   } = layerRefs;
 
-  toggleLayerVisibility(
-    map,
-    pgaLayer,
-    true,
-  );
+  toggleLayerVisibility(map, pgaLayer, true);
 
-  toggleLayerVisibility(
-    map,
-    countryLayer,
-    true,
-  );
+  toggleLayerVisibility(map, countryLayer, true);
 
-  if (map.getZoom() >= 4) {
-    toggleLayerVisibility(
-      map,
-      faultLayer,
-      true,
-    );
-  }
+  setFaultLayerVisibility(map, true);
 
-  pgaLayer.setOpacity?.(
-    0.75,
-  );
+  pgaLayer.setOpacity?.(0.75);
 
-  opacitySlider.value =
-    75;
+  opacitySlider.value = 75;
 
-  pgaToggle.checked =
-    true;
+  pgaToggle.checked = true;
 
-  countryToggle.checked =
-    true;
+  countryToggle.checked = true;
 
   syncLayerUI(map);
 }
@@ -140,22 +104,14 @@ export function createLayerControl({
   faultLayer,
   countryLayer,
 }) {
-  const layerControl =
-    L.control({
-      position:
-        "bottomright",
-    });
+  const layerControl = L.control({
+    position: "bottomright",
+  });
 
-  layerControl.onAdd =
-    function () {
-      const container =
-        L.DomUtil.create(
-          "div",
-          "hazard-layer-control",
-        );
+  layerControl.onAdd = function () {
+    const container = L.DomUtil.create("div", "hazard-layer-control");
 
-      container.innerHTML =
-        `
+    container.innerHTML = `
         <h4 class="layer-title">Layers</h4>
 
         <label class="layer-toggle-row">
@@ -188,113 +144,58 @@ export function createLayerControl({
         </div>
       `;
 
-      L.DomEvent.disableClickPropagation(
-        container,
-      );
+    L.DomEvent.disableClickPropagation(container);
 
-      L.DomEvent.disableScrollPropagation(
-        container,
-      );
+    L.DomEvent.disableScrollPropagation(container);
 
-      const pgaToggle =
-        container.querySelector(
-          "#toggle-pga",
-        );
+    const pgaToggle = container.querySelector("#toggle-pga");
 
-      const faultToggle =
-        container.querySelector(
-          "#toggle-fault",
-        );
+    const faultToggle = container.querySelector("#toggle-fault");
 
-      const countryToggle =
-        container.querySelector(
-          "#toggle-country",
-        );
+    const countryToggle = container.querySelector("#toggle-country");
 
-      const opacitySlider =
-        container.querySelector(
-          "#pga-opacity",
-        );
+    const opacitySlider = container.querySelector("#pga-opacity");
 
-      layerRefs = {
-        pgaLayer,
-        faultLayer,
-        countryLayer,
-        pgaToggle,
-        faultToggle,
-        countryToggle,
-        opacitySlider,
-      };
-
-      map.on(
-        "zoomend",
-        () => syncLayerUI(map),
-      );
-
-      /* PGA */
-      pgaToggle.addEventListener(
-        "change",
-        (event) => {
-          const visible =
-            event.target
-              .checked;
-
-          toggleLayerVisibility(
-            map,
-            pgaLayer,
-            visible,
-          );
-
-          setSliderState(
-            opacitySlider,
-            visible,
-          );
-        },
-      );
-
-      /* Fault */
-      faultToggle.addEventListener(
-        "change",
-        (event) => {
-          toggleLayerVisibility(
-            map,
-            faultLayer,
-            event.target
-              .checked,
-          );
-        },
-      );
-
-      /* Country */
-      countryToggle.addEventListener(
-        "change",
-        (event) => {
-          toggleLayerVisibility(
-            map,
-            countryLayer,
-            event.target
-              .checked,
-          );
-        },
-      );
-
-      /* Opacity */
-      opacitySlider.addEventListener(
-        "input",
-        (event) => {
-          pgaLayer.setOpacity?.(
-            Number(
-              event.target
-                .value,
-            ) / 100,
-          );
-        },
-      );
-
-      syncLayerUI(map);
-
-      return container;
+    layerRefs = {
+      pgaLayer,
+      faultLayer,
+      countryLayer,
+      pgaToggle,
+      faultToggle,
+      countryToggle,
+      opacitySlider,
     };
+
+    map.on("zoomend", () => syncLayerUI(map));
+
+    /* PGA */
+    pgaToggle.addEventListener("change", (event) => {
+      const visible = event.target.checked;
+
+      toggleLayerVisibility(map, pgaLayer, visible);
+
+      setSliderState(opacitySlider, visible);
+    });
+
+    /* Fault */
+    faultToggle.addEventListener("change", (event) => {
+      setFaultLayerVisibility(map, event.target.checked);
+    });
+
+    /* Country */
+    countryToggle.addEventListener("change", (event) => {
+      toggleLayerVisibility(map, countryLayer, event.target.checked);
+    });
+
+    /* Opacity */
+    opacitySlider.addEventListener("input", (event) => {
+      pgaLayer.setOpacity?.(Number(event.target.value) / 100);
+    });
+
+    syncLayerUI(map);
+
+    return container;
+  };
 
   return layerControl;
 }
