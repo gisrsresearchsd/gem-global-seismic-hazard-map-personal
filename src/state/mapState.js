@@ -18,11 +18,11 @@ export const mapState = {
 
   // Map UI
   ui: {
-  selectedMarker: null,
-  activePopup: null,
-  faultConnectionLine: null,
-  searchMarker: null,
-},
+    selectedMarker: null,
+    activePopup: null,
+    faultConnectionLine: null,
+    searchMarker: null,
+  },
 
   // Map settings
   settings: {

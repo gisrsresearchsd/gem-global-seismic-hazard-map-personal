@@ -1,6 +1,7 @@
 // Modal functionality for displaying notes
 
 let modal = null;
+let modalEventsInitialized = false;
 
 // Create modal if it doesn't already exist
 function createModal() {
@@ -44,6 +45,10 @@ function closeModal() {
 
 // Initialize modal event listeners
 function initModalEvents() {
+  if (modalEventsInitialized) {
+    return;
+  }
+
   modal = createModal();
 
   if (!modal) return;
@@ -64,10 +69,11 @@ function initModalEvents() {
 
   // Close on Escape
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.style.display === "block") {
+    if (e.key === "Escape" && modal && modal.style.display === "block") {
       closeModal();
     }
   });
+  modalEventsInitialized = true;
 }
 
 // Set modal body state

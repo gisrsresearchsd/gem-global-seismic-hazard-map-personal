@@ -6,68 +6,60 @@ let activePulseMarker = null;
 /* Clear markers */
 export function clearLocationMarker(map) {
   if (activeMarker) {
-    map.removeLayer(activeMarker);
+    if (map?.hasLayer?.(activeMarker)) {
+      map.removeLayer(activeMarker);
+    }
+
     activeMarker = null;
   }
 
   if (activePulseMarker) {
-    map.removeLayer(activePulseMarker);
+    if (map?.hasLayer?.(activePulseMarker)) {
+      map.removeLayer(activePulseMarker);
+    }
+
     activePulseMarker = null;
   }
 }
 
 /* Create marker */
-export function createLocationMarker(
-  map,
-  lat,
-  lng
-) {
+export function createLocationMarker(map, lat, lng) {
+  if (!map) {
+    return null;
+  }
+
   clearLocationMarker(map);
 
-  const marker = L.circleMarker(
-    [lat, lng],
-    {
-      radius: 10,
-      color: "#ffffff",
-      weight: 3,
-      fillColor: "#0066b3",
-      fillOpacity: 0.9,
-      pane: "overlayPane",
-    }
-  );
+  const marker = L.circleMarker([lat, lng], {
+    radius: 10,
+    color: "#ffffff",
+    weight: 3,
+    fillColor: "#0066b3",
+    fillOpacity: 0.9,
+    pane: "overlayPane",
+  });
 
-  const pulseMarker =
-    L.circleMarker(
-      [lat, lng],
-      {
-        radius: 20,
-        color: "#0066b3",
-        weight: 2,
-        fillColor: "#0066b3",
-        fillOpacity: 0.2,
-        pane: "overlayPane",
-      }
-    );
+  const pulseMarker = L.circleMarker([lat, lng], {
+    radius: 20,
+    color: "#0066b3",
+    weight: 2,
+    fillColor: "#0066b3",
+    fillOpacity: 0.2,
+    pane: "overlayPane",
+  });
 
   marker.addTo(map);
   pulseMarker.addTo(map);
 
   setTimeout(() => {
-    if (
-      activePulseMarker ===
-      pulseMarker
-    ) {
-      map.removeLayer(
-        pulseMarker
-      );
-      activePulseMarker =
-        null;
+    if (activePulseMarker === pulseMarker && map?.hasLayer?.(pulseMarker)) {
+      map.removeLayer(pulseMarker);
+      activePulseMarker = null;
     }
   }, 1000);
 
   activeMarker = marker;
-  activePulseMarker =
-    pulseMarker;
+  activePulseMarker = pulseMarker;
 
   return marker;
 }

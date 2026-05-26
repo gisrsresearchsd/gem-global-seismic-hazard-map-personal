@@ -4,7 +4,7 @@ import { RISK_THRESHOLDS } from "../risk/analysis/riskConstants";
 
 export function getSeismicClassification(pga) {
   const numericPga = Number(pga);
-  const { PGA_MINIMUM, PGA_MEDIUM, PGA_HIGH } = RISK_THRESHOLDS;
+  const { PGA_MINIMUM, PGA_MEDIUM, PGA_HIGH } = RISK_THRESHOLDS || {};
 
   // Invalid value
   if (!Number.isFinite(numericPga) || numericPga < 0) {
