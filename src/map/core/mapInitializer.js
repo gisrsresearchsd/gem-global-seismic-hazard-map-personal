@@ -43,7 +43,12 @@ export async function initializeMap() {
   overlayPane.style.zIndex = OVERLAY_PANE_Z_INDEX;
 
   /* Base map */
-  BASE_MAPS[APP_CONFIG.MAP.DEFAULT_BASEMAP].addTo(map);
+  const defaultMap =
+  BASE_MAPS[APP_CONFIG.MAP.DEFAULT_BASEMAP];
+
+if (defaultMap) {
+  defaultMap.addTo(map);
+}
 
   /* Layers */
   const faultLayer = await loadFaultLayer(map);

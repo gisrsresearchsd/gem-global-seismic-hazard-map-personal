@@ -17,9 +17,12 @@ export const mapState = {
   },
 
   // Map UI
-  ui: {    
-    searchMarker: null,
-  },
+  ui: {
+  selectedMarker: null,
+  activePopup: null,
+  faultConnectionLine: null,
+  searchMarker: null,
+},
 
   // Map settings
   settings: {

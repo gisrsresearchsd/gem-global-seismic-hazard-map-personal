@@ -58,30 +58,30 @@ export async function loadCountryLayer(map) {
       style: DEFAULT_COUNTRY_STYLE,
 
       onEachFeature(feature, layer) {
-  const originalStyle = {
-    color: "#64748b",
-    weight: 1,
-    fillOpacity: 0,
-  };
+        const originalStyle = {
+          color: "#64748b",
+          weight: 1,
+          fillOpacity: 0,
+        };
 
-  layer.bindTooltip(getCountryName(feature), {
-    sticky: true,
-  });
+        layer.bindTooltip(getCountryName(feature), {
+          sticky: true,
+        });
 
-  layer.on("mouseover", () => {
-    layer.setStyle({
-      color: "#2563eb",
-      weight: 2,
+        layer.on("mouseover", () => {
+          layer.setStyle({
+            color: "#2563eb",
+            weight: 2,
+          });
+        });
+
+        layer.on("mouseout", () => {
+          layer.setStyle(originalStyle);
+        });
+      },
     });
-  });
 
-  layer.on("mouseout", () => {
-    layer.setStyle(originalStyle);
-  });
-},
-    });
-
-    countryLayer.addTo(map);
+    
 
     return countryLayer;
   } catch (error) {

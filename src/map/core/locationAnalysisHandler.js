@@ -17,32 +17,23 @@ import {
   clearLocationMarker,
 } from "../utils/markerManager";
 
-const riskPGA =
-  document.getElementById("riskPGA");
-
-const riskLevel =
-  document.getElementById("riskLevel");
-
-const riskFault =
-  document.getElementById("riskFault");
+function getRiskElements() {
+  return {
+    riskPGA: document.getElementById("riskPGA"),
+    riskLevel: document.getElementById("riskLevel"),
+    riskFault: document.getElementById("riskFault"),
+  };
+}
 
 /*
 =====================
 Popup Helper
 =====================
 */
-function showPopup(
-  map,
-  lat,
-  lng,
-  content
-) {
+function showPopup(map, lat, lng, content) {
   map.closePopup();
 
-  L.popup()
-    .setLatLng([lat, lng])
-    .setContent(content)
-    .openOn(map);
+  L.popup().setLatLng([lat, lng]).setContent(content).openOn(map);
 }
 
 /*
@@ -50,24 +41,15 @@ function showPopup(
 Map State Update
 =====================
 */
-function updateMapStateLocation(
-  lat,
-  lng,
-  pga,
-  classification,
-  nearestFault
-) {
+function updateMapStateLocation(lat, lng, pga, classification, nearestFault) {
   mapState.location.lat = lat;
   mapState.location.lng = lng;
 
-  mapState.analysis.pga =
-    pga;
+  mapState.analysis.pga = pga;
 
-  mapState.analysis.classification =
-    classification;
+  mapState.analysis.classification = classification;
 
-  mapState.analysis.nearestFault =
-    nearestFault;
+  mapState.analysis.nearestFault = nearestFault;
 }
 
 /*
@@ -75,33 +57,27 @@ function updateMapStateLocation(
 Analysis UI Update
 =====================
 */
-function updateAnalysisUI({
-  formattedPGA,
-  classification,
-  nearestFault,
-}) {
-  riskPGA.textContent =
-    `${formattedPGA} g`;
+function updateAnalysisUI({ formattedPGA, classification, nearestFault }) {
+  const { riskPGA, riskLevel, riskFault } = getRiskElements();
 
-  riskLevel.className =
-    "risk-badge";
-
-  if (
-    classification?.colorClass
-  ) {
-    riskLevel.classList.add(
-      classification.colorClass
-    );
+  // Guard if panel not mounted yet
+  if (!riskPGA || !riskLevel || !riskFault) {
+    return;
   }
 
-  riskLevel.textContent =
-    classification?.label ||
-    "No Data";
+  riskPGA.textContent = `${formattedPGA} g`;
 
-  riskFault.textContent =
-    nearestFault
-      ? `${nearestFault.name} (${nearestFault.distance.toFixed(2)} km)`
-      : "--";
+  riskLevel.className = "risk-badge";
+
+  if (classification?.colorClass) {
+    riskLevel.classList.add(classification.colorClass);
+  }
+
+  riskLevel.textContent = classification?.label || "No Data";
+
+  riskFault.textContent = nearestFault
+    ? `${nearestFault.name} (${nearestFault.distance.toFixed(2)} km)`
+    : "--";
 }
 
 /*
@@ -112,14 +88,11 @@ Reset Analysis UI
 function resetAnalysisUI() {
   riskPGA.textContent = "--";
 
-  riskLevel.className =
-    "risk-badge";
+  riskLevel.className = "risk-badge";
 
-  riskLevel.textContent =
-    "No Data";
+  riskLevel.textContent = "No Data";
 
-  riskFault.textContent =
-    "--";
+  riskFault.textContent = "--";
 }
 
 /*
@@ -127,62 +100,31 @@ function resetAnalysisUI() {
 Analyze Location
 =====================
 */
-export async function analyzeLocation(
-  map,
-  lat,
-  lng
-) {
+export async function analyzeLocation(map, lat, lng) {
   try {
-    const currentZoom =
-      map.getZoom();
+    const currentZoom = map.getZoom();
 
     /*
     ---------------------
     Validate Zoom
     ---------------------
     */
-    if (
-      !isValidZoomForPGA(
-        currentZoom
-      )
-    ) {
-      const zoomWarning =
-        getZoomRecommendation(
-          currentZoom
-        );
+    if (!isValidZoomForPGA(currentZoom)) {
+      const zoomWarning = getZoomRecommendation(currentZoom);
 
-      riskPGA.textContent =
-        "--";
+      riskPGA.textContent = "--";
 
-      riskLevel.className =
-        "risk-badge";
+      riskLevel.className = "risk-badge";
 
-      riskLevel.textContent =
-        "Zoom In Required";
+      riskLevel.textContent = "Zoom In Required";
 
-      riskFault.textContent =
-        "--";
+      riskFault.textContent = "--";
 
-      createLocationMarker(
-        map,
-        lat,
-        lng
-      );
+      createLocationMarker(map, lat, lng);
 
-      showPopup(
-        map,
-        lat,
-        lng,
-        `⚠️ ${zoomWarning.message}`
-      );
+      showPopup(map, lat, lng, `⚠️ ${zoomWarning.message}`);
 
-      updateMapStateLocation(
-        lat,
-        lng,
-        null,
-        null,
-        null
-      );
+      updateMapStateLocation(lat, lng, null, null, null);
 
       return;
     }
@@ -192,64 +134,31 @@ export async function analyzeLocation(
     Create Shared Marker
     ---------------------
     */
-    createLocationMarker(
-      map,
-      lat,
-      lng
-    );
+    createLocationMarker(map, lat, lng);
 
     /*
     ---------------------
     PGA + Fault Query
     ---------------------
     */
-    const pgaValue =
-      await getPGAValue(
-        lat,
-        lng,
-        currentZoom
-      );
+    const pgaValue = await getPGAValue(lat, lng, currentZoom);
 
-    const nearestFault =
-      getNearestFault(
-        map,
-        lat,
-        lng
-      );
+    const nearestFault = getNearestFault(map, lat, lng);
 
     /*
     ---------------------
     No PGA Data
     ---------------------
     */
-    if (
-      pgaValue === null ||
-      Number.isNaN(pgaValue)
-    ) {
+    if (pgaValue === null || Number.isNaN(pgaValue)) {
       resetAnalysisUI();
 
-      updateMapStateLocation(
-        lat,
-        lng,
-        null,
-        null,
-        nearestFault
-      );
+      updateMapStateLocation(lat, lng, null, null, nearestFault);
 
-      const zoomRec =
-        getZoomRecommendation(
-          currentZoom
-        );
+      const zoomRec = getZoomRecommendation(currentZoom);
 
-      if (
-        zoomRec?.message
-      ) {
-        showPopup(
-          map,
-          lat,
-          lng,
-          `ℹ️ ${zoomRec.message}`
-        );
+      if (zoomRec?.message) {
+        showPopup(map, lat, lng, `ℹ️ ${zoomRec.message}`);
       }
 
       return;
@@ -260,23 +169,11 @@ export async function analyzeLocation(
     PGA Classification
     ---------------------
     */
-    const classification =
-      getSeismicClassification(
-        pgaValue
-      );
+    const classification = getSeismicClassification(pgaValue);
 
-    const formattedPGA =
-      Number(
-        pgaValue
-      ).toFixed(4);
+    const formattedPGA = Number(pgaValue).toFixed(4);
 
-    updateMapStateLocation(
-      lat,
-      lng,
-      pgaValue,
-      classification,
-      nearestFault
-    );
+    updateMapStateLocation(lat, lng, pgaValue, classification, nearestFault);
 
     updateAnalysisUI({
       formattedPGA,
@@ -294,17 +191,9 @@ export async function analyzeLocation(
         ? `${formattedPGA} g (approx - zoom ${currentZoom})`
         : `${formattedPGA} g`;
 
-    showPopup(
-      map,
-      lat,
-      lng,
-      popupContent
-    );
+    showPopup(map, lat, lng, popupContent);
   } catch (error) {
-    console.error(
-      "Location analysis failed:",
-      error
-    );
+    console.error("Location analysis failed:", error);
   }
 }
 
@@ -314,8 +203,6 @@ External Clear
 (resetControl / searchControl)
 =====================
 */
-export function clearAnalysisMarker(
-  map
-) {
+export function clearAnalysisMarker(map) {
   clearLocationMarker(map);
 }

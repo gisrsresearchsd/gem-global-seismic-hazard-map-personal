@@ -8,5 +8,9 @@ import { initializeRiskPanel } from "./risk/ui/riskPanel";
 import "./utils/noteModal";
 
 /* Initialize application */
-initializeMap();
-initializeRiskPanel();
+try {
+  initializeMap();
+  initializeRiskPanel();
+} catch (error) {
+  console.error(error);
+}
