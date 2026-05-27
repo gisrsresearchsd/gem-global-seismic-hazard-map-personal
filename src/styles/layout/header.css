@@ -20,7 +20,9 @@
   -webkit-backdrop-filter: blur(20px);
 
   box-shadow: var(--shadow-sm);
-  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .app-header:hover {
@@ -38,7 +40,7 @@
     90deg,
     var(--primary),
     var(--accent-teal),
-    var(--accent-purple),
+    var(--accent-coral),
     transparent
   );
   background-size: 200% auto;
@@ -56,7 +58,11 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 1px;
-  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent);
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   pointer-events: none;
 }
 
@@ -73,7 +79,9 @@
   height: 28px; /* Smaller size for right corner */
   width: auto;
   display: block;
-  transition: transform var(--transition-bounce), opacity var(--transition-fast);
+  transition:
+    transform var(--transition-bounce),
+    opacity var(--transition-fast);
   filter: brightness(0) invert(1); /* Converts dark logo to white */
   opacity: 0.85;
 }
@@ -89,7 +97,12 @@
   content: "";
   width: 1px;
   height: 24px;
-  background: linear-gradient(180deg, transparent, var(--border-light), transparent);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--border-light),
+    transparent
+  );
   margin-right: var(--spacing-md);
 }
 
@@ -104,17 +117,17 @@
 .app-header h1 {
   font-size: 20px;
   font-weight: 600;
-  letter-spacing: -0.3px;
+  letter-spacing: 0;
   white-space: nowrap;
-  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+  background: linear-gradient(
+    135deg,
+    var(--text-primary),
+    var(--text-secondary)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   transition: letter-spacing var(--transition-fast);
-}
-
-.app-header h1:hover {
-  letter-spacing: -0.2px;
 }
 
 /* Subtitle */
@@ -127,7 +140,7 @@
   color: var(--text-muted);
   background: var(--bg-control);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-md);
   transition: all var(--transition-bounce);
   cursor: default;
 }
@@ -169,7 +182,7 @@
   .header-subtitle {
     display: none;
   }
-  
+
   .header-right::before {
     height: 18px;
     margin-right: var(--spacing-sm);
@@ -183,7 +196,7 @@
     transform: translateX(0);
     opacity: 0.6;
   }
-  
+
   .header-logo img:hover {
     transform: none;
   }

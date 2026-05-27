@@ -166,7 +166,7 @@ function toggleCollapsedState(element) {
   return element.classList.contains("collapsed");
 }
 
-/* Update + / − indicator */
+/* Update collapse indicator */
 function updateCollapseIndicator(targetElement, indicatorElement) {
   const isCollapsed = toggleCollapsedState(targetElement);
 

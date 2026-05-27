@@ -50,11 +50,7 @@
 }
 
 .basemap-btn.active {
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--primary-dark)
-  );
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
 
   color: var(--text-primary);
   border-color: transparent;
@@ -62,7 +58,7 @@
 }
 
 .basemap-btn.active::before {
-  content: '✓';
+  content: "\2713";
   margin-right: 5px;
   font-size: 9px;
 }
